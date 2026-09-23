@@ -1,0 +1,25 @@
+PHDRS
+{
+	text PT_LOAD;
+}
+
+SECTIONS
+{
+	. = SEGMENT_START("text-segment", 0x10000) + SIZEOF_HEADERS;
+	.text :         { *(.text*) }   :text
+	/DISCARD/ : {
+		*(.note.*)
+		*(.comment)
+		/*
+			*(.debug*)
+		*/
+		*(.eh_frame_hdr)
+		*(.eh_frame)
+		/*
+			*(.got*)
+			*(.igot*)
+			*(.rel*)
+			*(.iplt*)
+		*/
+	}
+}
