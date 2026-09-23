@@ -7,15 +7,8 @@
 #define HEIGHT	1080
 #define SIZE    WIDTH*HEIGHT*4
 
-#if FLOAT == float
-#define POW(x,y)        powf(x,y)
-#define SQRT(x)         sqrtf(x)
-#else
-#define POW(x,y)        pow(x,y)
-#define SQRT(x)         sqrt(x)
-#endif
-
 #include "libcero.h"
+#include "../common.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"

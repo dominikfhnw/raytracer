@@ -3,13 +3,7 @@
 #include <math.h>
 #include <stdbool.h>
 
-#if FLOAT == float
-#define POW(x,y)	powf(x,y)
-#define SQRT(x)		sqrtf(x)
-#else
-#define POW(x,y)	pow(x,y)
-#define SQRT(x)		sqrt(x)
-#endif
+#include "common.h"
 
 void set_pixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
 {

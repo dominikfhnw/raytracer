@@ -28,23 +28,12 @@ AI: Google search for "SDL_MUSTLOCK"
 #define YOLO  0		// activate if you don't care about handling edge cases or being overly precise
 #endif
 
-#if DEBUG
-#define dprintf(...) printf(__VA_ARGS__)
-#else
-#define dprintf(...)
-#define NDEBUG 1
-#endif
-
-void render(void*, int, int);
 #if FBDEV
 #include "fbdev/fbdev.h"
 #else
 #include "sdl.h"
 #endif
 
-#include "vec3.h"
-
-// treat "surface" as an opaque data structure
 void render(void* surface, int w, int h)
 {
 	vec3 red  = { 1, 0, 0 };
