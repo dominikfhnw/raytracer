@@ -30,12 +30,20 @@ FUNC void clear(uint32_t* fb)
 FUNC void set_pixel(uint32_t *surface, int x, int y, uint32_t pixel)
 {
 	// XXX constant "4"
-	uint32_t* target_pixel = surface + (y * WIDTH) + (x * 4);
+	uint32_t* target_pixel = surface + (y * WIDTH) + x;
         *target_pixel = pixel;
 }
 
 #pragma GCC diagnostic pop
 
+static void wait()
+{
+	#if 1
+	do{}while(1);
+	#else
+	pause();
+	#endif
+}
 
 __attribute__((used,noreturn,flatten,GCCATTR)) void _start(){
 	asm volatile(INIT_BP);
@@ -48,7 +56,8 @@ __attribute__((used,noreturn,flatten,GCCATTR)) void _start(){
 	#endif
 	void* mem = mmap(NULL, SIZE, PROT_WRITE, MAP_SHARED, fd, 0);
 	render(mem, WIDTH, HEIGHT);
-	exit(0);
+	//exit(0);
+	wait();
 	__builtin_unreachable();
 }
 
