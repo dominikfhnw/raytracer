@@ -9,23 +9,20 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <asm-generic/fcntl.h>
-#if STATIC
-// sys/mman.h defines a prototype for mmap, meaning we can't declare it as static
 #define _SYS_MMAN_H
 #include <bits/mman-linux.h>
-#else
-#include <sys/mman.h>
-#endif
 #include <asm/unistd.h>
+/*
 #include <bits/types/struct_timespec.h>
+*/
 
 # ifndef __useconds_t_defined
-typedef __useconds_t useconds_t;
+typedef unsigned int useconds_t;
 #  define __useconds_t_defined
 # endif
 
 #ifndef __off_t_defined
-typedef __off64_t off_t;
+typedef signed long long int off_t;
 # define __off_t_defined
 #endif
 
@@ -140,11 +137,13 @@ static size_t write(int fd, const void* buf, size_t count){
 	return syscall3(__NR_write, fd, (size_t)buf, count);
 }
 
+/*
 FUNC int usleep(useconds_t usec){
 	volatile struct timespec sleep;
 	sleep.tv_nsec = usec*1000;
 	return syscall2(__NR_nanosleep, (size_t)&sleep, 0);
 }
+*/
 
 static int open(const char *pathname, int flags){
 	return syscall2(__NR_open, (size_t)pathname, flags);
@@ -152,6 +151,10 @@ static int open(const char *pathname, int flags){
 
 static int print(const char* string) {
 	return (int)write(STDOUT_FILENO, string, __builtin_strlen(string));
+}
+
+static int pause() {
+	return syscall0(__NR_pause);
 }
 
 static void exit_dc(){
