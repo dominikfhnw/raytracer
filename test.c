@@ -24,18 +24,22 @@ AI: Google search for "SDL_MUSTLOCK"
 #define GAMMA 2.2
 #define FLOAT float
 #define DEBUG 0
-#define YOLO  1		// activate if you don't care about handling edge cases
-
-#include <SDL.h>
-#include <math.h>
-#include <assert.h>
-#include <stdbool.h>
+#ifndef YOLO
+#define YOLO  0		// activate if you don't care about handling edge cases or being overly precise
+#endif
 
 #if DEBUG
 #define dprintf(...) printf(__VA_ARGS__)
 #else
 #define dprintf(...)
 #define NDEBUG 1
+#endif
+
+void render(void*, int, int);
+#if FBDEV
+#include "fbdev/fbdev.h"
+#else
+#include "sdl.h"
 #endif
 
 typedef struct vec3 {
@@ -51,7 +55,12 @@ uint8_t map_component(FLOAT c)
 	if (c < 0)
 		c = 0;
 
-	return 255*pow(c, 1/GAMMA);
+	#if YOLO				// assumes GAMMA == 2.0
+		return 255 * SQRT(c);
+	#else
+		return 255 * POW(c, 1/GAMMA);
+	#endif
+
 }
 
 uint32_t colormap(vec3 color)
@@ -88,13 +97,6 @@ vec3 lerp(vec3 a, vec3 b, FLOAT amount)
 	return add(scalar_mult(a, amount), scalar_mult(b, 1-amount));
 }
 
-void set_pixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
-{
-	// XXX constant "4"
-	uint8_t *target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * 4);
-        *(uint32_t*)target_pixel = pixel;
-}
-
 // treat "surface" as an opaque data structure
 void render(void* surface, int w, int h)
 {
@@ -111,42 +113,4 @@ void render(void* surface, int w, int h)
 			set_pixel(surface, i, j, pixel);
 		}
 	}
-}
- 
-void wait()
-{
-	SDL_Event event;
-	bool quit = false;
-	while (!quit) {
-		SDL_WaitEvent(&event);
-
-		switch (event.type) {
-		case SDL_QUIT:
-			quit = true;
-			break;
-		}
-	}
-}
-
-
-int main()
-{
-	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Window* window = SDL_CreateWindow("computer graphics dominikr",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
-	SDL_Surface* surface = SDL_GetWindowSurface(window);
-	if (SDL_MUSTLOCK(surface) && !YOLO) {
-		SDL_LockSurface(surface);
-	}
-
-	render(surface, surface->w, surface->h);
-
-	if (SDL_MUSTLOCK(surface) && !YOLO) {
-		SDL_UnlockSurface(surface);
-	}
-	SDL_UpdateWindowSurface(window);
-
-	wait();
-
-	return 0;
 }
