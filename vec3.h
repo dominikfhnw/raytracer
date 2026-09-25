@@ -53,12 +53,27 @@ vec3 sub(vec3 a, vec3 b)
 	return a;
 }
 
+FLOAT dotP(vec3 a, vec3 b)
+{
+	return a.x*b.x + a.y*b.y + a.z*b.z;
+}
+
+FLOAT len1(vec3 a)
+{
+	return SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
+}
+
+FLOAT len(vec3 a)
+{
+	return SQRT(dotP(a,a));
+}
+
 vec3 norm(vec3 a)
 {
-	FLOAT len = SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
-	a.x = a.x / len;
-	a.y = a.y / len;
-	a.z = a.z / len;
+	FLOAT l = len(a);
+	a.x = a.x / l;
+	a.y = a.y / l;
+	a.z = a.z / l;
 	return a;
 }
 
