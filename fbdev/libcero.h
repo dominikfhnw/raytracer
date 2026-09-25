@@ -168,7 +168,7 @@ static void exit(int status){
 }
 
 #define CONSTF	__attribute__((const,nothrow)) static
-#if TAN
+#if ENABLE_TAN
 CONSTF float tanf(float arg0) {
 	float ret;
 	__asm__ __volatile__(
