@@ -63,7 +63,7 @@ typedef signed long long int off_t;
 #pragma GCC diagnostic ignored "-Wunused-function"
 static size_t syscall0(size_t nr){
 	size_t ret;
-	asm volatile(
+	__asm__ __volatile__(
 		SYSCALL
 		: "=a" (ret) : "0" (nr)
 	);
@@ -72,7 +72,7 @@ static size_t syscall0(size_t nr){
 
 static size_t syscall1(size_t nr, size_t arg0){
 	size_t ret;
-	asm volatile(
+	__asm__ __volatile__(
 		SYSCALL
 		: "=a" (ret) : "0" (nr), ARG0 (arg0)
 	);
@@ -81,7 +81,7 @@ static size_t syscall1(size_t nr, size_t arg0){
 
 static size_t syscall2(size_t nr, size_t arg0, size_t arg1){
 	size_t ret;
-	asm volatile(
+	__asm__ __volatile__(
 		SYSCALL
 		: "=a" (ret) : "0" (nr), ARG0 (arg0), ARG1 (arg1)
 	);
@@ -90,7 +90,7 @@ static size_t syscall2(size_t nr, size_t arg0, size_t arg1){
 
 static size_t syscall3(size_t nr, size_t arg0, size_t arg1, size_t arg2){
 	size_t ret;
-	asm volatile(
+	__asm__ __volatile__(
 		SYSCALL
 		: "=a" (ret) : "0" (nr), ARG0 (arg0), ARG1 (arg1), ARG2 (arg2)
 	);
@@ -99,9 +99,9 @@ static size_t syscall3(size_t nr, size_t arg0, size_t arg1, size_t arg2){
 
 static size_t syscall5(size_t nr, size_t arg0, size_t arg1, size_t arg2, size_t arg3, size_t arg4){
 	size_t ret;
-	register size_t arg3r asm (ARG3) = arg3;
-	register size_t arg4r asm (ARG4) = arg4;
-	asm volatile(
+	register size_t arg3r __asm__ (ARG3) = arg3;
+	register size_t arg4r __asm__ (ARG4) = arg4;
+	__asm__ __volatile__(
 		SYSCALL
 		: "=a" (ret) : "0" (nr), ARG0 (arg0), ARG1 (arg1), ARG2 (arg2), "r" (arg3r), "r" (arg4r)
 	);
@@ -112,12 +112,12 @@ FUNC void* mmap(void *addr, size_t length, int prot, int flags, int fd, off_t of
 	(void)addr;
 	(void)offset;
 	void* ret;
-	register size_t arg3r asm (ARG3) = flags;
-	register size_t arg4r asm (ARG4) = fd;
+	register size_t arg3r __asm__ (ARG3) = flags;
+	register size_t arg4r __asm__ (ARG4) = fd;
 	#if defined(__x86_64__)
-		register size_t arg5r asm (ARG5) = 0;
+		register size_t arg5r __asm__ (ARG5) = 0;
 	#endif
-	asm volatile(
+	__asm__ __volatile__(
 		#if defined(__i386__)
 			"push %%ebp\n\t"
 			"xor %%ebp,%%ebp\n\t"
