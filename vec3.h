@@ -4,6 +4,13 @@ typedef struct vec3 {
 	FLOAT z;
 } vec3;
 
+typedef struct sphere {
+	vec3	center;
+	FLOAT	radius;
+	vec3	color;
+} sphere;
+
+
 uint8_t map_component(FLOAT c)
 {
 	if (c > 1)
@@ -36,6 +43,32 @@ vec3 add(vec3 a, vec3 b)
 	a.y = a.y + b.y;
 	a.z = a.z + b.z;
 	return a;
+}
+
+vec3 sub(vec3 a, vec3 b)
+{
+	a.x = a.x - b.x;
+	a.y = a.y - b.y;
+	a.z = a.z - b.z;
+	return a;
+}
+
+vec3 norm(vec3 a)
+{
+	FLOAT len = SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
+	a.x = a.x / len;
+	a.y = a.y / len;
+	a.z = a.z / len;
+	return a;
+}
+
+vec3 crossP(vec3 a, vec3 b)
+{
+	vec3 result;
+	result.x = (a.y * b.z) - (a.z * b.y);
+	result.y = (a.z * b.x) - (a.x * b.z);
+	result.z = (a.x * b.y) - (a.y * b.x);
+	return result;
 }
 
 vec3 scalar_mult(vec3 a, FLOAT amount)
