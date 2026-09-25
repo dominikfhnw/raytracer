@@ -85,7 +85,7 @@ vec3 eye_ray(vec3 f, vec3 rl, vec3 ul, float x, float y)
 	ret = add(f,   xs);
 	ret = add(ret, ys);
 
-	return ret;
+	return norm(ret);
 }
 
 FLOAT screen_convert(int width, int x)
