@@ -23,7 +23,7 @@ void ORIGset_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
     *(Uint32 *)target_pixel = pixel;
 }
 
-void wait()
+void wait(void)
 {
 	SDL_Event event;
 	bool quit = false;
