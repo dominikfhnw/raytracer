@@ -198,7 +198,7 @@ void render(void* surface, int w, int h)
 			uint32_t pixel;
 
 #if 1
-			FLOAT min = FLT_MAX;
+			FLOAT min = FLOAT_MAX;
 			int   num = -1;
 			for(unsigned int v=0; v<NUM_SPHERES; v++){
 				FLOAT hit = hitcheck(scene[v], eye, ray);
