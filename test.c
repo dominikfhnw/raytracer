@@ -22,16 +22,6 @@ AI: Google search for "SDL_MUSTLOCK"
 "How do I calculate the cross product in C? I'm using a struct called vec3 that contains 3d points"
 
 
-Scene
-{
-	Sphere(Center=[-1001, 0, 0], r=1000, Color= Red) a
-	Sphere(Center=[ 1001, 0, 0], r=1000, Color= Blue) b
-	Sphere(Center=[ 0, 0,1001], r=1000, Color= Gray) c
-	Sphere(Center=[ 0, -1001, 0], r=1000, Color= Gray) d
-	Sphere(Center=[ 0, 1001, 0], r=1000, Color= White) e
-	Sphere(Center=[ -0.6, -0.7,-0.6], r= 0.3, Color= Yellow) f
-	Sphere(Center=[ 0.3, -0.4, 0.3], r= 0.6, Color=LightCyan) g
-}
 (Vec3 o, Vec3 d) CreateEyeRay(Vec3 Eye, Vec3 LookAt, float FOV, Vec2 Pixel) { … }
 HitPoint FindClosestHitPoint(Scene s, Vec3 o, Vec3 d) { … }
 Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
@@ -176,21 +166,10 @@ void render(void* surface, int w, int h)
 	dvec(fhat);
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
 
+
+/*
 	FLOAT p = screen_convert(200, 200);
 	dprintf("pos %f\n",p);
-
-	/*
-	//create_eye_ray(eye, lookat, fov, 1, 1);
-	vec3 ray = eye_ray(fhat, rl, ul, 0, 0);
-	dvec(ray);
-
-	vec3 ray2 = eye_ray(fhat, rl, ul, 1, 1);
-	dvec(ray2);
-	
-	FLOAT hit = hitcheck(scene[2], eye, ray);
-	dprintf("hit %f\n",hit);
-	*/
-
 
 	// iterate through the scene
 	for(unsigned int i=0; i<NUM_SPHERES; i++){
@@ -204,6 +183,7 @@ void render(void* surface, int w, int h)
 		FLOAT c = le*le - scene[i].radius*scene[i].radius;
 		dprintf("c   %f\n",c);
 	}
+*/
 
 	// week 1
 
