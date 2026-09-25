@@ -70,29 +70,6 @@ sphere scene[] = {
 	{ {0.3, -0.4, 0.3}, 0.6, CYAN },	// g
 };
 
-/*
-vec3 create_eye_ray(vec3 eye, vec3 lookat, FLOAT fov, int x, int y)
-{
-
-	dprintf("sizeof sphere %ld, sizeof spheres %ld, num spheres %ld\n", sizeof(sphere), sizeof(spheres), sizeof(spheres)/sizeof(sphere));
-	vec3 f = sub(lookat, eye);
-	FLOAT lambda = tanf(fov/2);
-
-	vec3 up = UP;
-	vec3 r  = crossP(up, f);
-	vec3 u  = crossP(r, f);
-
-	// d = f + x*r*lambda + y*u*lambda
-
-	dprintf("vec f %f %f %f, lambda %f\n", f.x, f.y, f.z, lambda);
-	dprintf("vec r %f %f %f\n", r.x, r.y, r.z);
-	dprintf("vec u %f %f %f\n", u.x, u.y, u.z);
-	vec3 n = norm(u);
-	dprintf("vec ^u %f %f %f\n", n.x, n.y, n.z);
-
-}
-*/
-
 vec3 eye_ray(vec3 f, vec3 rl, vec3 ul, int x, int y)
 {
 	vec3 xs = scalar_mult(rl, x);
