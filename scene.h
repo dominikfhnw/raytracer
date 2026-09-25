@@ -6,10 +6,17 @@
 #define WHITE	{   1,   1,   1 }
 #define YELLOW	{ 0.8, 0.8,   0 }
 
+#define UP	{   0,   1,   0 }
+
+#if PERSPECTIVE2
+#define EYE	{-0.9,-0.5, 0.9 }
+#define LOOK	{   0,   0,   0 }
+#define FOV	110
+#else
 #define EYE	{   0,   0,  -4 }
 #define LOOK	{   0,   0,   6 }
-#define UP	{   0,   1,   0 }
 #define FOV	36
+#endif
 
 sphere scene[] = {
 	{ {-1001,     0,    0}, 1000, RED    },	// a 0

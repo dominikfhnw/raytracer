@@ -32,6 +32,7 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 #define WIDTH	600
 #define HEIGHT	600
 //#define YOLO  1		// activate if you don't care about handling edge cases or being overly precise
+#define PERSPECTIVE2 1
 
 #define FLOAT	float
 #define CONST	__attribute__((const))
