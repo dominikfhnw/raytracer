@@ -167,19 +167,42 @@ static void exit(int status){
 	__builtin_unreachable();
 }
 
-static float sqrtf(float arg0) {
+#define CONSTF	__attribute__((const,nothrow)) static
+#if TAN
+CONSTF float tanf(float arg0) {
 	float ret;
-	asm volatile(
-		"fsqrt"
+	__asm__ __volatile__(
+		"fptan\n\t"
+		"fstp %%st(0)\n\t"		// get rid of the extra 1 fptan pushes
 		: "=t" (ret) : "0" (arg0)
 	);
 	return ret;
 }
 
-static double sqrt(double arg0) {
+CONSTF double tan(double arg0) {
 	double ret;
-	asm volatile(
-		"fsqrt"
+	__asm__ __volatile__(
+		"fptan\n\t"
+		"fstp %%st(0)\n\t"		// get rid of the extra 1 fptan pushes
+		: "=t" (ret) : "0" (arg0)
+	);
+	return ret;
+}
+#endif
+
+CONSTF float sqrtf(float arg0) {
+	float ret;
+	__asm__ __volatile__(
+		"fsqrt\n\t"
+		: "=t" (ret) : "0" (arg0)
+	);
+	return ret;
+}
+
+CONSTF double sqrt(double arg0) {
+	double ret;
+	__asm__ __volatile__(
+		"fsqrt\n\t"
 		: "=t" (ret) : "0" (arg0)
 	);
 	return ret;
