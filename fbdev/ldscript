@@ -6,7 +6,7 @@ PHDRS
 SECTIONS
 {
 	. = SEGMENT_START("text-segment", 0x10000) + SIZEOF_HEADERS;
-	.text :         { *(.text*) }   :text
+	.text ALIGN(1): { *(.text*) *(.data*) *(.rodata*) }   :text
 	/DISCARD/ : {
 		*(.note.*)
 		*(.comment)
