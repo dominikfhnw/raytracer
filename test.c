@@ -18,7 +18,6 @@ secret modes, esp. what TomCatAbaddon posted https://www.pouet.net/topic.php?whi
 Coordinate system: right-handed, Z up
 
 AI: Google search for "SDL_MUSTLOCK"
-+ crossP, SDL set_pixel(?)
 "How do I calculate the cross product in C? I'm using a struct called vec3 that contains 3d points"
 
 
@@ -54,7 +53,7 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 #define GREEN	{ 0, 0.8,  0 }
 #define BLUE	{ 0, 0, 0.8 }
 #define CYAN	{ 0.5, 0.8, 0.8 }
-#define GRAY	{ 0.5, 0.5, 0.5 }
+#define GRAY	{ 0.6, 0.6, 0.6 }
 #define WHITE	{ 1, 1,  1 }
 #define YELLOW	{ 0.8, 0.8,  0 }
 
