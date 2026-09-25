@@ -6,6 +6,7 @@
 #define dprintf(...)
 #define NDEBUG 1
 #endif
+#define dvec(a) dprintf("vec %-6s%f %f %f\n", #a, a.x, a.y, a.z)
 
 #if FLOAT == float
 #define POW(x,y)	powf(x,y)
