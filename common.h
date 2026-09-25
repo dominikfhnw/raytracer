@@ -13,10 +13,12 @@
 #define POW(x,y)	powf(x,y)
 #define SQRT(x)		sqrtf(x)
 #define TAN(x)		tanf(x)
+#define FLOAT_MAX	FLT_MAX
 #else
 #define POW(x,y)	pow(x,y)
 #define SQRT(x)		sqrt(x)
 #define TAN(x)		tan(x)
+#define FLOAT_MAX	DBL_MAX
 #endif
 
 void render(void*, int, int);
