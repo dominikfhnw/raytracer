@@ -1,15 +1,6 @@
 /* 
 References:
 Coding style https://www.kernel.org/doc/html/latest/process/coding-style.html
-SDL2 installation/basic compile https://wiki.libsdl.org/SDL2/Installation
-SDL2 pixel drawing https://gigi.nullneuron.net/gigilabs/sdl2-pixel-drawing/
-SDL2 pixel drawing https://gist.github.com/mmozeiko/729860eeb414f1a2ee345d9d3ab4dd4e
-https://web.archive.org/web/20160326085538/http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-https://web.archive.org/web/20120420111824/http://www.libsdl.org/intro.en/usingvideo.html
-SDL3 surfaces and colors https://www.studyplan.dev/sdl3/sdl3-surfaces-colors#sdl3-surfaces-and-colors
-
-pixel formats: https://wiki.libsdl.org/SDL2/CategoryPixels
-save "screenshot": https://wiki.libsdl.org/SDL3/SDL_SaveBMP
 
 going offtopic:
 https://en.wikipedia.org/wiki/VESA_BIOS_Extensions#VBE_mode_numbers
@@ -85,19 +76,15 @@ FLOAT hitcheck(sphere s, vec3 E, vec3 d)
 	vec3  CE = sub(E,C);
 	FLOAT a = 1;
 	FLOAT b = 2 * dotP(CE, d);
-	//FLOAT lCE = len(CE);
 	FLOAT le = len(CE);
-	//FLOAT lCE = dotP(CE,CE);
 	FLOAT c = (le*le) - (r * r);
 
 	FLOAT root = b*b - 4*a*c;
-	//dprintf("root %f\n", root);
 	if (root < 0)
 		return 0;
 
 	FLOAT l1 = (-b + SQRT(root)) / (2*a);
 	FLOAT l2 = (-b - SQRT(root)) / (2*a);
-	//dprintf("has intersec %f, %f\n", l1, l2);
 
 	// XXX what if our scene has all objects strictly in front?
 	if (l1 < l2 && l1 > 0)
@@ -142,30 +129,6 @@ void render(void* surface, int w, int h)
 	dvec(fhat);
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
 
-
-/*
-	FLOAT p = screen_convert(200, 200);
-	dprintf("pos %f\n",p);
-
-	// iterate through the scene
-	for(unsigned int i=0; i<NUM_SPHERES; i++){
-		dprintf("\ni %d\n",i);
-		vec3   C = scene[i].center;
-		vec3  CE = sub(eye,C);
-		FLOAT le = len(CE);
-		dvec(CE);
-		dprintf("len %f\n",le);
-		dprintf("rad %f\n",scene[i].radius);
-		FLOAT c = le*le - scene[i].radius*scene[i].radius;
-		dprintf("c   %f\n",c);
-	}
-*/
-
-	// week 1
-
-	vec3 red   = RED;
-	vec3 green = GREEN;
-
 	for(int j=0; j < h; j++){
 		FLOAT fy = screen_convert(h, j);
 		for(int i=0; i < w; i++){
@@ -174,7 +137,6 @@ void render(void* surface, int w, int h)
 			vec3 ray = eye_ray(fhat, rl, ul, fx, fy);
 			uint32_t pixel;
 
-#if 1
 			FLOAT min = FLOAT_MAX;
 			int   num = -1;
 			for(unsigned int v=0; v<NUM_SPHERES; v++){
@@ -187,21 +149,8 @@ void render(void* surface, int w, int h)
 
 			if (num >= 0) {
 				pixel = colormap(scene[num].color);
+				set_pixel(surface, i, j, pixel);
 			}
-#else
-
-			sphere s = scene[0];
-			FLOAT hit = hitcheck(s, eye, ray);
-			if (hit > 0) {
-				pixel = colormap(s.color);
-			}
-#endif
-			else {
-				FLOAT amount = (FLOAT)i/(FLOAT)w;
-				vec3 color = lerp(green, red, amount);
-				pixel = colormap(color);
-			}
-			set_pixel(surface, i, j, pixel);
 		}
 	}
 }
