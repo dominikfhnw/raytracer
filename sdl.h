@@ -60,7 +60,7 @@ int main(void)
 		#endif
 	}
 	SDL_Window* window = SDL_CreateWindow("computer graphics dominikr",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
 	check(window, "window init failed");
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	check(surface, "getsurface failed");

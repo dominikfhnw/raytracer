@@ -38,9 +38,11 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 
 */
 
-#define GAMMA 2.2
-#define FLOAT float
-#define DEBUG 1
+#define GAMMA	2.2
+#define FLOAT	float
+#define DEBUG	1
+#define WIDTH	200
+#define HEIGHT	200
 //#define YOLO  1		// activate if you don't care about handling edge cases or being overly precise
 
 #if FBDEV			// super secret, compiler-crashing mode
