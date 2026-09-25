@@ -29,7 +29,7 @@ FUNC void set_pixel(uint32_t *surface, int x, int y, uint32_t pixel)
 
 #pragma GCC diagnostic pop
 
-static void wait()
+static void wait(void)
 {
 	#if 1
 	do{}while(1);
@@ -38,12 +38,12 @@ static void wait()
 	#endif
 }
 
-__attribute__((used,noreturn,flatten,GCCATTR)) void _start(){
-	asm volatile(INIT_BP);
+__attribute__((used,noreturn,flatten,GCCATTR)) void _start(void){
+	__asm__ __volatile__(INIT_BP);
 	int fd = open("/dev/fb0", O_RDWR);
 	#if 1
 		if(fd < 0){
-			asm volatile("int3\n\t");
+			__asm__ __volatile__("int3\n\t");
 			__builtin_unreachable();
 		}
 	#endif
