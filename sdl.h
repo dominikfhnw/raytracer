@@ -7,15 +7,13 @@
 
 void set_pixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
 {
-	uint8_t *target_pixel;
+	#if YOLO
+	# define pixel_bytes 4
+	#else
+	# define pixel_bytes surface->format->BytesPerPixel
+	#endif
 
-	if (YOLO) {
-		target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * 4);
-	}
-	else {
-		target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * surface->format->BytesPerPixel);
-	}
-
+	uint8_t *target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * pixel_bytes);
         *(uint32_t*)target_pixel = pixel;
 }
 
