@@ -40,8 +40,8 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 
 #define GAMMA	2.2
 #define DEBUG	1
-#define WIDTH	200
-#define HEIGHT	200
+#define WIDTH	600
+#define HEIGHT	600
 //#define YOLO  1		// activate if you don't care about handling edge cases or being overly precise
 
 #define FLOAT	float
@@ -60,13 +60,13 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 #define UP	{ 0, 1, 0 }
 #define FOV	36
 
-#define RED	{ 1, 0,  0 }
-#define GREEN	{ 0, 1,  0 }
-#define BLUE	{ 0, 0,  1 }
-#define CYAN	{ 0.4, 0.8, 0.8 }
+#define RED	{ 0.8, 0,  0 }
+#define GREEN	{ 0, 0.8,  0 }
+#define BLUE	{ 0, 0, 0.8 }
+#define CYAN	{ 0.5, 0.8, 0.8 }
 #define GRAY	{ 0.5, 0.5, 0.5 }
 #define WHITE	{ 1, 1,  1 }
-#define YELLOW	{ 1, 1,  0 }
+#define YELLOW	{ 0.8, 0.8,  0 }
 
 #define ZERO	{ 0, 0,  0 }
 
