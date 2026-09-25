@@ -153,11 +153,11 @@ static int print(const char* string) {
 	return (int)write(STDOUT_FILENO, string, __builtin_strlen(string));
 }
 
-static int pause() {
+static int pause(void) {
 	return syscall0(__NR_pause);
 }
 
-static void exit_dc(){
+static void exit_dc(void){
 	syscall0(__NR_exit);
 	__builtin_unreachable();
 }
