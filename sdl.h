@@ -40,13 +40,39 @@ void wait()
 	}
 }
 
-
-int main()
+#if DEBUG
+void check(void* ptr, char* str)
 {
-	SDL_Init(SDL_INIT_VIDEO);
+	if (ptr == NULL){
+		const char* geterr = SDL_GetError();
+		const char* err;
+		if ( strlen(geterr) == 0 )
+			err = "<no SDL error available>";
+		else
+			err = geterr;
+		dprintf("%s: %s\n", str, err);
+		exit(2);
+	}
+}
+#else
+#define check(x,y)
+#endif
+
+int main(void)
+{
+	dprintf("START\n");
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+		check(NULL, "init fail");
+		#if !DEBUG
+			return 2;
+		#endif
+	}
 	SDL_Window* window = SDL_CreateWindow("computer graphics dominikr",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0);
+	check(window, "window init failed");
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
+	check(surface, "getsurface failed");
+
 	if (SDL_MUSTLOCK(surface) && !YOLO) {
 		SDL_LockSurface(surface);
 	}
