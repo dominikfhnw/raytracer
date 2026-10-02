@@ -53,10 +53,11 @@ typedef signed long long int off_t;
 #endif
 
 
-#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
+#if NAKED && defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
 #define GCCATTR naked
 #else
 #define GCCATTR
+#undef	NAKED
 #endif
 
 #pragma GCC diagnostic push
