@@ -79,6 +79,17 @@ CONSTEXPR FLOAT len(const vec3 a)
 	return SQRT(dotP(a,a));
 }
 
+CONSTEXPR bool normal(const vec3 a)
+{
+	if (!isfinite(a.x))
+		return false;
+	if (!isfinite(a.y))
+		return false;
+	if (!isfinite(a.z))
+		return false;
+	return true;
+}
+
 CONSTEXPR vec3 limit(vec3 a, const FLOAT l)
 {
 	a.x = a.x > l ? l : a.x;

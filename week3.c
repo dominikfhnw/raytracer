@@ -253,6 +253,8 @@ void render(void* surface, const int w, const int h)
 			for(int w=0;w < SAMPLES;w++){
 				//vec3 single = limit(compute_color(eye, ray),3);
 				vec3 single = compute_color(eye, ray);
+				if (!normal(single))
+					single = (vec3)GRAY;
 				sample = add(sample,single);
 			}
 			sample = scalar_mult(sample, 1/(FLOAT)SAMPLES);
