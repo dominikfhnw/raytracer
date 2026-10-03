@@ -2,19 +2,30 @@
 #include <assert.h>
 #include <math.h>
 #include <stdbool.h>
+#include <sys/time.h>
 
 #include "common.h"
 
-void set_pixel(SDL_Surface *surface, int x, int y, uint32_t pixel)
+void set_pixel(void *window, const int x, const int y, const uint32_t pixel)
 {
 	#if YOLO
 	# define pixel_bytes 4
 	#else
 	# define pixel_bytes surface->format->BytesPerPixel
 	#endif
+	SDL_Surface *surface = SDL_GetWindowSurface((SDL_Window*)window);
 
 	uint8_t *target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * pixel_bytes);
         *(uint32_t*)target_pixel = pixel;
+}
+
+void update(void *window)
+{
+	SDL_UpdateWindowSurface((SDL_Window*)window);
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	if (event.type == SDL_QUIT)
+		exit(0);
 }
 
 void wait(void)
@@ -33,7 +44,7 @@ void wait(void)
 }
 
 #if DEBUG
-void check(void* ptr, char* str)
+void check(const void* const ptr, const char* const str)
 {
 	if (ptr == NULL){
 		const char* geterr = SDL_GetError();
@@ -50,6 +61,8 @@ void check(void* ptr, char* str)
 #define check(x,y)
 #endif
 
+#define xstr(s) str(s)
+#define str(s) #s
 int main(void)
 {
 	dprintf("START\n");
@@ -59,7 +72,7 @@ int main(void)
 			return 2;
 		#endif
 	}
-	SDL_Window* window = SDL_CreateWindow("computer graphics dominikr",
+	SDL_Window* window = SDL_CreateWindow("dominikr samples " xstr(SAMPLES) " P " xstr(P) ,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
 	check(window, "window init failed");
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
@@ -69,13 +82,28 @@ int main(void)
 		SDL_LockSurface(surface);
 	}
 
-	render(surface, surface->w, surface->h);
+	#if DEBUG
+		struct timeval tv1;
+		struct timeval tv2;
+
+		gettimeofday(&tv1,NULL);
+	#endif
+	render(window, surface->w, surface->h);
+	#if DEBUG
+		gettimeofday(&tv2,NULL);
+
+		long int t1 = tv1.tv_sec*1e6 + tv1.tv_usec;
+		long int t2 = tv2.tv_sec*1e6 + tv2.tv_usec;
+		long int diff = t2 - t1;
+		dprintf("time: %fs\n", diff/1e6);
+	#endif
 
 	if (SDL_MUSTLOCK(surface) && !YOLO) {
 		SDL_UnlockSurface(surface);
 	}
 	SDL_UpdateWindowSurface(window);
 
+	dprintf("FIN\n");
 	wait();
 
 	return 0;
