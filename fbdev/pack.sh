@@ -9,6 +9,7 @@ sstrip(){
 sstrip "$1" "${1}-strip"
 ls -l  "$1"
 
-if ! lz4pack "${1}-strip" 2>/dev/null; then
-	ls -l "${1}-strip"
-fi
+#if ! lz4pack "${1}-strip" 2>/dev/null; then
+#	ls -l "${1}-strip"
+#fi
+fbdev/sfx.sh "${1}-strip"
