@@ -1,5 +1,6 @@
 #include <float.h>
-#define PI           3.14159265358979323846
+#define PI		3.14159265358979323846
+#define CONST		__attribute__((const,nothrow))
 
 #if DEBUG
 #define dprintf(...) printf(__VA_ARGS__)
