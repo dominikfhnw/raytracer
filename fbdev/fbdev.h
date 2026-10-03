@@ -14,6 +14,9 @@ float tanf(float);
 #include "libcero.h"
 #include "../common.h"
 
+// XXX where to put it?
+#define   RAND_MAX        2147483647
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 FUNC void clear(uint32_t* fb)
@@ -23,11 +26,12 @@ FUNC void clear(uint32_t* fb)
 		fb[v] = 0;
 }
 
+#define update(x)
 
-FUNC void set_pixel(uint32_t *surface, int x, int y, uint32_t pixel)
+FUNC void set_pixel(void *surface, int x, int y, uint32_t pixel)
 {
 	// XXX constant "4"
-	uint32_t* target_pixel = surface + (y * WIDTH) + x;
+	uint32_t* target_pixel = (uint32_t*)surface + (y * WIDTH) + x;
         *target_pixel = pixel;
 }
 
@@ -43,7 +47,9 @@ static void wait(void)
 }
 
 __attribute__((used,noreturn,flatten,GCCATTR)) void _start(void){
+	#if NAKED
 	__asm__ __volatile__(INIT_BP);
+	#endif
 	int fd = open("/dev/fb0", O_RDWR);
 	#if 1
 		if(fd < 0){
