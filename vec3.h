@@ -38,7 +38,7 @@ CONST uint32_t colormap(const vec3 color)
 	// return (r << 0) + (g << 8) + (b << 16); // rgba32
 }
 
-CONST vec3 add(vec3 a, const vec3 b)
+CONSTEXPR vec3 add(vec3 a, const vec3 b)
 {
 	a.x = a.x + b.x;
 	a.y = a.y + b.y;
@@ -46,7 +46,7 @@ CONST vec3 add(vec3 a, const vec3 b)
 	return a;
 }
 
-CONST vec3 sub(vec3 a, const vec3 b)
+CONSTEXPR vec3 sub(vec3 a, const vec3 b)
 {
 	a.x = a.x - b.x;
 	a.y = a.y - b.y;
@@ -54,7 +54,7 @@ CONST vec3 sub(vec3 a, const vec3 b)
 	return a;
 }
 
-CONST vec3 hadamard(vec3 a, const vec3 b)
+CONSTEXPR vec3 hadamard(vec3 a, const vec3 b)
 {
 	a.x = a.x * b.x;
 	a.y = a.y * b.y;
@@ -62,7 +62,7 @@ CONST vec3 hadamard(vec3 a, const vec3 b)
 	return a;
 }
 
-CONST FLOAT dotP(const vec3 a, const vec3 b)
+CONSTEXPR FLOAT dotP(const vec3 a, const vec3 b)
 {
 	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
@@ -77,7 +77,7 @@ CONST FLOAT len(const vec3 a)
 	return SQRT(dotP(a,a));
 }
 
-CONST vec3 limit(vec3 a, const FLOAT l)
+CONSTEXPR vec3 limit(vec3 a, const FLOAT l)
 {
 	a.x = a.x > l ? l : a.x;
 	a.y = a.y > l ? l : a.y;
@@ -99,7 +99,7 @@ CONST vec3 normV(const vec3 a, const vec3 b)
 	return norm(sub(b, a));
 }
 
-CONST vec3 crossP(const vec3 a, const vec3 b)
+CONSTEXPR vec3 crossP(const vec3 a, const vec3 b)
 {
 	vec3 result;
 	result.x = (a.y * b.z) - (a.z * b.y);
@@ -108,7 +108,7 @@ CONST vec3 crossP(const vec3 a, const vec3 b)
 	return result;
 }
 
-CONST vec3 scalar_mult(vec3 a, const FLOAT amount)
+CONSTEXPR vec3 scalar_mult(vec3 a, const FLOAT amount)
 {
 	a.x = a.x * amount;
 	a.y = a.y * amount;
@@ -116,7 +116,7 @@ CONST vec3 scalar_mult(vec3 a, const FLOAT amount)
 	return a;
 }
 
-CONST vec3 lerp(const vec3 a, vec3 b, const FLOAT amount)
+CONSTEXPR vec3 lerp(const vec3 a, vec3 b, const FLOAT amount)
 {
 	assert(amount >= 0);
 	assert(amount <= 1);

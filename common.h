@@ -1,6 +1,12 @@
 #include <float.h>
 #define PI		3.14159265358979323846
+
 #define CONST		__attribute__((const,nothrow))
+#if __cplusplus
+#define CONSTEXPR	constexpr CONST
+#else
+#define CONSTEXPR	CONST
+#endif
 
 #if DEBUG
 #define dprintf(...) printf(__VA_ARGS__)
@@ -13,12 +19,12 @@
 #if FLOAT == float
 #define POW(x,y)	powf(x,y)
 #define SQRT(x)		sqrtf(x)
-#define TAN(x)		tanf(x)
+#define TAN(x)		__builtin_tanf(x)
 #define FLOAT_MAX	FLT_MAX
 #else
 #define POW(x,y)	pow(x,y)
 #define SQRT(x)		sqrt(x)
-#define TAN(x)		tan(x)
+#define TAN(x)		__builtin_tan(x)
 #define FLOAT_MAX	DBL_MAX
 #endif
 
