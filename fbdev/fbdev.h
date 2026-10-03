@@ -10,7 +10,6 @@
 #define HEIGHT	1080
 #define SIZE    WIDTH*HEIGHT*4
 
-float tanf(float);
 #include "libcero.h"
 #include "../common.h"
 
