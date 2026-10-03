@@ -12,7 +12,7 @@ typedef struct sphere {
 } sphere;
 
 
-uint8_t map_component(FLOAT c)
+CONST uint8_t map_component(FLOAT c)
 {
 	if (c > 1)
 		c = 1;
@@ -27,7 +27,7 @@ uint8_t map_component(FLOAT c)
 
 }
 
-uint32_t colormap(vec3 color)
+CONST uint32_t colormap(const vec3 color)
 {
 	uint8_t r = map_component(color.x);
 	uint8_t g = map_component(color.y);
@@ -38,7 +38,7 @@ uint32_t colormap(vec3 color)
 	// return (r << 0) + (g << 8) + (b << 16); // rgba32
 }
 
-vec3 add(vec3 a, vec3 b)
+CONST vec3 add(vec3 a, const vec3 b)
 {
 	a.x = a.x + b.x;
 	a.y = a.y + b.y;
@@ -46,7 +46,7 @@ vec3 add(vec3 a, vec3 b)
 	return a;
 }
 
-vec3 sub(vec3 a, vec3 b)
+CONST vec3 sub(vec3 a, const vec3 b)
 {
 	a.x = a.x - b.x;
 	a.y = a.y - b.y;
@@ -54,22 +54,38 @@ vec3 sub(vec3 a, vec3 b)
 	return a;
 }
 
-FLOAT dotP(vec3 a, vec3 b)
+CONST vec3 hadamard(vec3 a, const vec3 b)
+{
+	a.x = a.x * b.x;
+	a.y = a.y * b.y;
+	a.z = a.z * b.z;
+	return a;
+}
+
+CONST FLOAT dotP(const vec3 a, const vec3 b)
 {
 	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
-FLOAT len1(vec3 a)
+CONST FLOAT len1(const vec3 a)
 {
 	return SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
 }
 
-FLOAT len(vec3 a)
+CONST FLOAT len(const vec3 a)
 {
 	return SQRT(dotP(a,a));
 }
 
-vec3 norm(vec3 a)
+CONST vec3 limit(vec3 a, const FLOAT l)
+{
+	a.x = a.x > l ? l : a.x;
+	a.y = a.y > l ? l : a.y;
+	a.z = a.z > l ? l : a.z;
+	return a;
+}
+
+CONST vec3 norm(vec3 a)
 {
 	FLOAT l = len(a);
 	a.x = a.x / l;
@@ -78,7 +94,12 @@ vec3 norm(vec3 a)
 	return a;
 }
 
-vec3 crossP(vec3 a, vec3 b)
+CONST vec3 normV(const vec3 a, const vec3 b)
+{
+	return norm(sub(b, a));
+}
+
+CONST vec3 crossP(const vec3 a, const vec3 b)
 {
 	vec3 result;
 	result.x = (a.y * b.z) - (a.z * b.y);
@@ -87,7 +108,7 @@ vec3 crossP(vec3 a, vec3 b)
 	return result;
 }
 
-vec3 scalar_mult(vec3 a, FLOAT amount)
+CONST vec3 scalar_mult(vec3 a, const FLOAT amount)
 {
 	a.x = a.x * amount;
 	a.y = a.y * amount;
@@ -95,7 +116,7 @@ vec3 scalar_mult(vec3 a, FLOAT amount)
 	return a;
 }
 
-vec3 lerp(vec3 a, vec3 b, FLOAT amount)
+CONST vec3 lerp(const vec3 a, vec3 b, const FLOAT amount)
 {
 	assert(amount >= 0);
 	assert(amount <= 1);
