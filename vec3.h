@@ -7,7 +7,8 @@ typedef struct vec3 {
 typedef struct sphere {
 	vec3	center;
 	FLOAT	radius;
-	vec3	color;
+	vec3	diffuse;
+	vec3	emission;
 } sphere;
 
 
