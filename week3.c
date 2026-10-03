@@ -127,11 +127,6 @@ void find_closest_hitpoint(const vec3 eye, const vec3 ray, const int x, const in
 	}
 }
 
-#if __cplusplus
-#define CONSTEXPR constexpr
-#else
-#define CONSTEXPR CONST
-#endif
 CONSTEXPR FLOAT getlambda(void)
 {
 	FLOAT fov_rad = FOV * PI / 180;
@@ -216,18 +211,18 @@ vec3 compute_color(const vec3 eye, const vec3 ray)
 
 void render(void* surface, const int w, const int h)
 {
-	const vec3 eye		= EYE;
-	const vec3 look		= LOOK;
-	const vec3 up		= UP;
-	const vec3 f		= normV(eye, look);
-	const vec3 r		= norm(crossP(up, f));
-	const vec3 u		= norm(crossP(r,  f));
+	CONSTV vec3 eye		= EYE;
+	CONSTV vec3 look	= LOOK;
+	CONSTV vec3 up		= UP;
+	CONSTV vec3 f		= normV(eye, look);
+	CONSTV vec3 r		= norm(crossP(up, f));
+	CONSTV vec3 u		= norm(crossP(r,  f));
 
-	const FLOAT lambda	= getlambda();
+	CONSTV FLOAT lambda	= getlambda();
 
-	const vec3 rl		= scalar_mult(r, lambda);
-	const vec3 ul		= scalar_mult(u, lambda);
-	const vec3 fhat		= f;
+	CONSTV vec3 rl		= scalar_mult(r, lambda);
+	CONSTV vec3 ul		= scalar_mult(u, lambda);
+	CONSTV vec3 fhat	= f;
 
 	// check if lambda has been precalculated
 	// can only be checked if optimizer is turned on

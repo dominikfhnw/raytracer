@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 typedef struct vec3 {
 	FLOAT x;
 	FLOAT y;
@@ -72,7 +74,7 @@ CONST FLOAT len1(const vec3 a)
 	return SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
 }
 
-CONST FLOAT len(const vec3 a)
+CONSTEXPR FLOAT len(const vec3 a)
 {
 	return SQRT(dotP(a,a));
 }
@@ -85,7 +87,7 @@ CONSTEXPR vec3 limit(vec3 a, const FLOAT l)
 	return a;
 }
 
-CONST vec3 norm(vec3 a)
+CONSTEXPR vec3 norm(vec3 a)
 {
 	FLOAT l = len(a);
 	a.x = a.x / l;
@@ -94,7 +96,7 @@ CONST vec3 norm(vec3 a)
 	return a;
 }
 
-CONST vec3 normV(const vec3 a, const vec3 b)
+CONSTEXPR vec3 normV(const vec3 a, const vec3 b)
 {
 	return norm(sub(b, a));
 }

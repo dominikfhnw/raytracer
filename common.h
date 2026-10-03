@@ -2,10 +2,12 @@
 #define PI		3.14159265358979323846
 
 #define CONST		__attribute__((const,nothrow))
-#if __cplusplus
+#if __cplusplus >= 202002L
 #define CONSTEXPR	constexpr CONST
+#define CONSTV		constexpr
 #else
 #define CONSTEXPR	CONST
+#define CONSTV		const
 #endif
 
 #if DEBUG

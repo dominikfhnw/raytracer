@@ -191,8 +191,16 @@ CONSTF double tan(double arg0) {
 }
 #endif
 
-CONSTF float sqrtf(float arg0) {
+#if __cplusplus >= 202002L
+#define LIBCONSTEXPR constexpr CONSTF
+#else
+#define LIBCONSTEXPR CONSTF
+#endif
+LIBCONSTEXPR float sqrtf(float arg0) {
 	float ret;
+	if (__builtin_constant_p(arg0)) {
+		return __builtin_sqrtf(arg0);
+	}
 	__asm__ __volatile__(
 		"fsqrt\n\t"
 		: "=t" (ret) : "0" (arg0)
