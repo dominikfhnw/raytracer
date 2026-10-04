@@ -33,7 +33,7 @@ CONSTEXPR FLOAT dotP(const vec3 a, const vec3 b)
 	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
-CONST FLOAT len1(const vec3 a)
+CONSTEXPR FLOAT len1(const vec3 a)
 {
 	return SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
 }

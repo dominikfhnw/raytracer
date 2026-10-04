@@ -42,7 +42,7 @@ AI: Google search for "SDL_MUSTLOCK"
 
 #include "scene.h"
 
-CONST vec3 eye_ray(const vec3 f, const vec3 rl, const vec3 ul, const float x, const float y)
+CONSTEXPR vec3 eye_ray(const vec3 f, const vec3 rl, const vec3 ul, const float x, const float y)
 {
 	assert(x >= -1);
 	assert(x <=  1);
@@ -60,7 +60,7 @@ CONST vec3 eye_ray(const vec3 f, const vec3 rl, const vec3 ul, const float x, co
 	return norm(ret);
 }
 
-CONST FLOAT screen_convert(const int width, const int x)
+CONSTEXPR FLOAT screen_convert(const int width, const int x)
 {
 	assert(x <= width);
 
@@ -73,7 +73,7 @@ CONST FLOAT screen_convert(const int width, const int x)
 	return result;
 }
 
-CONST FLOAT hitcheck(const sphere s, const vec3 E, const vec3 d)
+CONSTEXPR FLOAT hitcheck(const sphere s, const vec3 E, const vec3 d)
 {
 	FLOAT r = s.radius;
 	vec3  C = s.center;
@@ -156,7 +156,7 @@ vec3 BRDF(vec3 wi, vec3 wo)
 }
 */
 
-vec3 compute_color(const vec3 eye, const vec3 ray)
+CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray)
 {
 	FLOAT min = FLOAT_MAX;
 	int   num = -1;
