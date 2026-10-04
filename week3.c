@@ -148,6 +148,10 @@ CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray)
 			num = v;
 		}
 	}
+	if (num < 0) {
+		vec3 black = BLACK;
+		return black;
+	}
 	vec3 emission	= scene[num].emission;
 
 #if 0
@@ -232,10 +236,7 @@ static void render(void* surface, const int w, const int h)
 
 			vec3 sample = {0, 0, 0};
 			for(int w=0;w < SAMPLES;w++){
-				//vec3 single = limit(compute_color(eye, ray),3);
 				vec3 single = compute_color(eye, ray);
-				if (!normal(single))
-					single = (vec3)GRAY;
 				sample = add(sample,single);
 			}
 			sample = scalar_mult(sample, 1/(FLOAT)SAMPLES);
