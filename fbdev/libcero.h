@@ -203,7 +203,7 @@ CONSTF double tan(double arg0) {
 #else
 #define LIBCONSTEXPR CONSTF
 #endif
-LIBCONSTEXPR float sqrtf(float arg0) {
+LIBCONSTEXPR __attribute__((always_inline)) float sqrtf(float arg0) {
 	float ret;
 	if (__builtin_constant_p(arg0)) {
 		return __builtin_sqrtf(arg0);
