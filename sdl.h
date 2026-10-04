@@ -6,7 +6,7 @@
 
 #include "common.h"
 
-void set_pixel(void *window, const int x, const int y, const uint32_t pixel)
+static void set_pixel(void *window, const int x, const int y, const uint32_t pixel)
 {
 	#if YOLO
 	# define pixel_bytes 4
@@ -19,7 +19,7 @@ void set_pixel(void *window, const int x, const int y, const uint32_t pixel)
         *(uint32_t*)target_pixel = pixel;
 }
 
-void update(void *window)
+static void update(void *window)
 {
 	SDL_UpdateWindowSurface((SDL_Window*)window);
 	SDL_Event event;
@@ -28,7 +28,7 @@ void update(void *window)
 		exit(0);
 }
 
-void wait(void)
+static void wait(void)
 {
 	SDL_Event event;
 	bool quit = false;
@@ -44,7 +44,7 @@ void wait(void)
 }
 
 #if DEBUG
-void check(const void* const ptr, const char* const str)
+static void check(const void* const ptr, const char* const str)
 {
 	if (ptr == NULL){
 		const char* geterr = SDL_GetError();
