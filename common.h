@@ -33,6 +33,6 @@
 #endif
 
 static void render(void*, int, int);
-#include "rand.h"
 #include "vec3.h"
+#include "rand.h"
 #include "ray.h"

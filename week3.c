@@ -115,22 +115,6 @@ CONSTEXPR FLOAT getlambda(void)
 	return TAN(fov_rad/2);
 }
 
-CONSTEXPR FLOAT getrand(void)
-{
-	//TODO: does it also go negative?
-	return (FLOAT) ( ((FLOAT)RAND() - ((FLOAT)RMAX/2.0) ) / (FLOAT)RMAX);
-}
-
-CONSTEXPR vec3 randvec(void)
-{
-	vec3 rand = { getrand(), getrand(), getrand() };
-	rand = norm(rand);
-	if (len(rand)>1)
-		return randvec();
-	return rand;
-
-}
-
 /*
 vec3 BRDF(vec3 wi, vec3 wo)
 {

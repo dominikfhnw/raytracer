@@ -31,3 +31,53 @@ CONSTEXPR uint32_t colormap(const vec3 color)
 	return (r << 16) + (g << 8) + (b << 0); // bgra32
 	// return (r << 0) + (g << 8) + (b << 16); // rgba32
 }
+
+#if NEWRAND
+CONSTEXPR vec3 randvecNEW(void)
+{
+	float u = int_to_float(xorshift32());
+	assert(u >= 0);
+	assert(u <= 1);
+	float v = int_to_float(xorshift32());
+	assert(v >= 0);
+	assert(v <= 1);
+	float rad = PI/180;
+	float theta = 2.0f * PI * u;
+	float phi = acos(2.0f * v - 1.0f);
+
+	float x = cos(theta) * sin(phi) * rad;
+	float y = sin(theta) * sin(phi) * rad;
+	float z = cos(phi) * rad;
+
+	vec3 result = {x, y, z};
+	return result;
+}
+#endif
+
+CONSTEXPR vec3 randvecOLD(void)
+{
+	vec3 rand = { frand(), frand(), frand() };
+	rand = norm(rand);
+	return rand;
+}
+
+CONSTEXPR vec3 randvec(void)
+{
+	vec3 rand;
+#if NEWRAND
+	rand = randvecNEW();
+#else
+	rand = randvecOLD();
+#endif
+
+#if 0
+	FLOAT l = dotP(rand,rand);
+	if (l > 1.0+EPSILON) {
+		dvec(rand);
+		dprintf("ERR %f\n",l);
+		exit(4);
+	}
+	assert(l <= 1.0+EPSILON);
+#endif
+	return rand;
+}
