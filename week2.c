@@ -23,19 +23,24 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 #define WIDTH	600
 #define HEIGHT	600
 //#define YOLO  1		// activate if you don't care about handling edge cases or being overly precise
-#define PERSPECTIVE2 1
+#define PERSPECTIVE2 0
+#define WEIRD	1
 
 #define FLOAT	float
 #define CONST	__attribute__((const))
 #define NUM_SPHERES sizeof(scene)/sizeof(sphere)
 
 #if FBDEV			// super secret, compiler-crashing mode
+#define NAKED	1
 #include "fbdev/fbdev.h"
+#elif DOS
+#define NAKED	1
+#include "dos32/dos.h"
 #else				// boring old SDL
 #include "sdl.h"
 #endif
 
-#include "scene.h"
+#include "scene2.h"
 
 vec3 eye_ray(vec3 f, vec3 rl, vec3 ul, float x, float y)
 {
@@ -76,23 +81,60 @@ FLOAT hitcheck(sphere s, vec3 E, vec3 d)
 	vec3  CE = sub(E,C);
 	FLOAT a = 1;
 	FLOAT b = 2 * dotP(CE, d);
-	FLOAT le = len(CE);
-	FLOAT c = (le*le) - (r * r);
+	// TODO: c could be precomputed per sphere
+	FLOAT c = dotP(CE,CE) - (r * r);
 
 	FLOAT root = b*b - 4*a*c;
+
+#if 0 && !WEIRD
 	if (root < 0)
 		return 0;
+#endif
 
 	FLOAT l1 = (-b + SQRT(root)) / (2*a);
 	FLOAT l2 = (-b - SQRT(root)) / (2*a);
 
-	// XXX what if our scene has all objects strictly in front?
+#if WEIRD
+	/* if (l1 < l2 && l1 > 0) {
+		dprintf("1\n");
+		return l1;
+	}
+	else */ if (l2 > 0) {
+		//dprintf("2\n");
+		return l2;
+	}
+	else {
+		//dprintf("3\n");
+		return 0;
+	}
+#else
 	if (l1 < l2 && l1 > 0)
 		return l1;
 	else if (l2 > 0)
 		return l2;
 	else
 		return 0;
+#endif
+
+}
+
+void find_closest_hitpoint(vec3 eye, vec3 ray, int x, int y, void* surface)
+{
+	uint32_t pixel;
+	FLOAT min = FLOAT_MAX;
+	int   num = -1;
+	for(unsigned int v=0; v<NUM_SPHERES; v++){
+		FLOAT hit = hitcheck(scene[v], eye, ray);
+		if (hit != 0 && hit < min) {
+			min = hit;
+			num = v;
+		}
+	}
+
+	if (num >= 0) {
+		pixel = colormap(scene[num].diffuse);
+		set_pixel(surface, x, y, pixel);
+	}
 }
 
 CONST FLOAT getlambda(void)
@@ -103,14 +145,10 @@ CONST FLOAT getlambda(void)
 
 void render(void* surface, int w, int h)
 {
-
 	const vec3 eye		= EYE;
-	const vec3 lookat	= LOOK;
-
-	const vec3 f		= norm(sub(lookat, eye));
-	const vec3 up		= UP;
-	const vec3 r		= norm(crossP(up, f));
-	const vec3 u		= norm(crossP(r,  f));
+	const vec3 f		= norm(sub((vec3)LOOK, eye));
+	const vec3 r		= norm(crossP((vec3)UP, f));
+	const vec3 u		= norm(crossP(r       , f));
 
 	const FLOAT lambda	= getlambda();
 
@@ -128,29 +166,19 @@ void render(void* surface, int w, int h)
 	dvec(ul);
 	dvec(fhat);
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
+	//dprintf("sqrt(-1) = %f\n", SQRT(-1));
 
-	for(int j=0; j < h; j++){
-		FLOAT fy = screen_convert(h, j);
-		for(int i=0; i < w; i++){
-			FLOAT fx = screen_convert(w, i);
-
+	for(int y=0; y < h; y++){
+		FLOAT fy = screen_convert(h, y);
+		// TODO: precompute as many things from the eye ray already here
+		for(int x=0; x < w; x++){
+#if 1
+			FLOAT fx = screen_convert(w, x);
 			vec3 ray = eye_ray(fhat, rl, ul, fx, fy);
-			uint32_t pixel;
-
-			FLOAT min = FLOAT_MAX;
-			int   num = -1;
-			for(unsigned int v=0; v<NUM_SPHERES; v++){
-				FLOAT hit = hitcheck(scene[v], eye, ray);
-				if (hit != 0 && hit < min) {
-					min = hit;
-					num = v;
-				}
-			}
-
-			if (num >= 0) {
-				pixel = colormap(scene[num].color);
-				set_pixel(surface, i, j, pixel);
-			}
+			find_closest_hitpoint(eye, ray, x, y, surface);
+#else
+			set_pixel(surface, x, y, 0xff00ff);
+#endif
 		}
 	}
 }
