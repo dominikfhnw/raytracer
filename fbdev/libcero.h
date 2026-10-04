@@ -223,11 +223,5 @@ CONSTF double sqrt(double arg0) {
 	return ret;
 }
 
-// TODO: needs actual implementation
-int rand(void)
-{
-	return 123456;
-}
-
 #pragma GCC diagnostic pop
 

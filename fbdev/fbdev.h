@@ -13,9 +13,6 @@
 #include "libcero.h"
 #include "../common.h"
 
-// XXX where to put it?
-#define   RAND_MAX        2147483647
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 FUNC void clear(uint32_t* fb)
