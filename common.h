@@ -32,3 +32,4 @@
 
 void render(void*, int, int);
 #include "vec3.h"
+#include "ray.h"
