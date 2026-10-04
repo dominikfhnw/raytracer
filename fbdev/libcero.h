@@ -60,6 +60,12 @@ typedef signed long long int off_t;
 #undef	NAKED
 #endif
 
+#if __cplusplus
+#define NOMANGLE extern "C"
+#else
+#define NOMANGLE
+#endif
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
 static size_t syscall0(size_t nr){

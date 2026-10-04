@@ -45,7 +45,7 @@ static void wait(void)
 	#endif
 }
 
-__attribute__((used,noreturn,flatten,GCCATTR)) void _start(void){
+NOMANGLE __attribute__((used,noreturn,GCCATTR)) void _start(void){
 	#if NAKED
 	__asm__ __volatile__(INIT_BP);
 	#endif
