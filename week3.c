@@ -124,18 +124,20 @@ vec3 BRDF(vec3 wi, vec3 wo)
 CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray)
 {
 	FLOAT min = FLOAT_MAX;
-	int   num = -1;
-	for(unsigned int v=0; v<NUM_SPHERES; v++){
+	int   num = 0;
+	for(unsigned int v=1; v<NUM_SPHERES; v++){
 		FLOAT hit = hitcheck(scene[v], eye, ray);
 		if (hit != 0 && hit < min) {
 			min = hit;
 			num = v;
 		}
 	}
+	/*
 	if (num < 0) {
 		vec3 black = BLACK;
 		return black;
 	}
+	*/
 	vec3 emission	= scene[num].emission;
 
 #if 0
@@ -143,7 +145,7 @@ CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray)
 		return emission;
 #endif
 
-	if ( RAND() < P*RMAX )
+	if ( num == 0 || RAND() < P*RMAX )
 		return emission;
 
 

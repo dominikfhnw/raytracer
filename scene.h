@@ -22,7 +22,7 @@
 
 #if 1
 sphere scene[] = {
-	//{ {-1001, -1000,-1000},    1, BLACK,  BLACK   },	// -1
+	{ {    0,     0,    0},    0, BLACK,  BLACK   },	// null object - color used when no ray hits
 	{ {-1001,     0,    0}, 1000, RED,    BLACK   },	// a 0
 	{ { 1001,     0,    0}, 1000, BLUE,   BLACK   },	// b 1
 	{ {    0,     0, 1001}, 1000, GRAY,   BLACK   },	// c 2
