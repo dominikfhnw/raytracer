@@ -209,7 +209,7 @@ static void render(void* surface, const int w, const int h)
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
 	//dprintf("sqrt(-1) = %f\n", SQRT(-1));
 
-//#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(static)
 	for(int y=0; y < h; y++){
 		FLOAT fy = screen_convert(h, y);
 		// TODO: precompute as many things from the eye ray already here
