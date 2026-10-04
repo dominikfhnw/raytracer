@@ -1,7 +1,7 @@
 #include <float.h>
 #define PI		3.14159265358979323846
 
-#define CONST		__attribute__((const,nothrow))
+#define CONST		__attribute__((const,nothrow)) static
 #if __cplusplus >= 202002L
 #define CONSTEXPR	constexpr CONST
 #define CONSTV		constexpr
@@ -30,7 +30,7 @@
 #define FLOAT_MAX	DBL_MAX
 #endif
 
-void render(void*, int, int);
+static void render(void*, int, int);
 #include "rand.h"
 #include "vec3.h"
 #include "ray.h"

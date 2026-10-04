@@ -209,7 +209,7 @@ CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray)
 #endif
 }
 
-void render(void* surface, const int w, const int h)
+static void render(void* surface, const int w, const int h)
 {
 	CONSTV vec3 eye		= EYE;
 	CONSTV vec3 look	= LOOK;
