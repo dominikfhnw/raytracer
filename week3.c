@@ -109,25 +109,6 @@ CONSTEXPR FLOAT hitcheck(const sphere s, const vec3 E, const vec3 d)
 
 }
 
-void find_closest_hitpoint(const vec3 eye, const vec3 ray, const int x, const int y, void* surface)
-{
-	uint32_t pixel;
-	FLOAT min = FLOAT_MAX;
-	int   num = -1;
-	for(unsigned int v=0; v<NUM_SPHERES; v++){
-		FLOAT hit = hitcheck(scene[v], eye, ray);
-		if (hit != 0 && hit < min) {
-			min = hit;
-			num = v;
-		}
-	}
-
-	if (num >= 0) {
-		pixel = colormap(scene[num].diffuse);
-		set_pixel(surface, x, y, pixel);
-	}
-}
-
 CONSTEXPR FLOAT getlambda(void)
 {
 	FLOAT fov_rad = FOV * PI / 180;
