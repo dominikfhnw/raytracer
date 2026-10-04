@@ -239,7 +239,8 @@ static void render(void* surface, const int w, const int h)
 				sample = add(sample,single);
 			}
 			sample = scalar_mult(sample, 1/(FLOAT)SAMPLES);
-			set_pixel(surface, x, y, colormap(sample));
+			uint32_t pixel = colormap(sample);
+			set_pixel(surface, x, y, pixel);
 			//vec3 sample = compute_color(eye, ray); // single sample
 			//set_pixel(surface, x, y, 0xff00ff); // week1
 		}
