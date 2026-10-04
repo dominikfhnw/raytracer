@@ -31,5 +31,6 @@
 #endif
 
 void render(void*, int, int);
+#include "rand.h"
 #include "vec3.h"
 #include "ray.h"

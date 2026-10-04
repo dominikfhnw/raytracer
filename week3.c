@@ -134,14 +134,13 @@ CONSTEXPR FLOAT getlambda(void)
 	return TAN(fov_rad/2);
 }
 
-FLOAT getrand(void)
+CONSTEXPR FLOAT getrand(void)
 {
 	//TODO: does it also go negative?
-	//return (FLOAT) (rand() / RAND_MAX);
-	return (FLOAT) ( ((FLOAT)rand() - ((FLOAT)RAND_MAX/2.0) ) / (FLOAT)RAND_MAX);
+	return (FLOAT) ( ((FLOAT)RAND() - ((FLOAT)RMAX/2.0) ) / (FLOAT)RMAX);
 }
 
-vec3 randvec(void)
+CONSTEXPR vec3 randvec(void)
 {
 	vec3 rand = { getrand(), getrand(), getrand() };
 	rand = norm(rand);
@@ -175,7 +174,7 @@ vec3 compute_color(const vec3 eye, const vec3 ray)
 		return emission;
 #endif
 
-	if ( rand() < P*RAND_MAX )
+	if ( RAND() < P*RMAX )
 		return emission;
 
 
