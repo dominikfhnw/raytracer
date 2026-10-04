@@ -1,7 +1,7 @@
+#include "pre.h"
 #include <SDL.h>
 #include <assert.h>
 #include <math.h>
-#include <stdbool.h>
 #include <sys/time.h>
 
 #include "common.h"

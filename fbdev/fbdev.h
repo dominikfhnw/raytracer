@@ -10,6 +10,7 @@
 #define HEIGHT	1080
 #define SIZE    WIDTH*HEIGHT*4
 
+#include "../pre.h"
 #include "libcero.h"
 #include "../common.h"
 
