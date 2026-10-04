@@ -1,37 +1,32 @@
 /* 
-References:
-Coding style https://www.kernel.org/doc/html/latest/process/coding-style.html
-
-going offtopic:
-https://en.wikipedia.org/wiki/VESA_BIOS_Extensions#VBE_mode_numbers
-secret modes, esp. what TomCatAbaddon posted https://www.pouet.net/topic.php?which=11672&page=1
-
-AI: Google search for "SDL_MUSTLOCK"
-"How do I calculate the cross product in C? I'm using a struct called vec3 that contains 3d points"
-
+raytracer by dominikr
 */
 
-#define P	0.5
-#define SAMPLES	32
-#define NUDGE	0.005
-//#define NUDGE	0.0
 
-#define XORSHIFT 1
-#define NAKED	1
-#define FLOAT_EXCEPTION	1
+#define P		0.5	// probability to bounce once more
+#define SAMPLES		256	// number of samples for each pixel
+#define UPDATE		1	// update screen while calculation is running
 
-#define GAMMA	2.2
+#define WIDTH		600	// image width
+#define HEIGHT		600	// image height
+#define GAMMA		2.2	// image gamme
+
+#define FLOAT_EXCEPTION	0	// croak if something's wrong with a float
 #ifndef DEBUG
-#define DEBUG	1
+#define DEBUG		1	// some basic debug info and error messages
 #endif
-#define WIDTH	600
-#define HEIGHT	600
-//#define YOLO  1		// activate if you don't care about handling edge cases or being overly precise
-#define PERSPECTIVE2 0
-#define WEIRD	0
 
-#define FLOAT	float
-#define NUM_SPHERES sizeof(scene)/sizeof(sphere)
+
+#define XORSHIFT	1	// faster PRNG, no slowdown in multithreading
+#define NAKED		1	// this option is only for indecent people and scene coders
+#define NUDGE		0.005	// amount to nudge the intersection point back
+#define EPSILON		0.0001	// used for float comparisons
+//#define YOLO		1	// activate if you don't care about handling edge cases or being overly precise
+#define PERSPECTIVE2	0
+#define WEIRD		1	// somehow only one solution of the quadratic equation is needed
+
+#define FLOAT		float
+#define NUM_SPHERES	sizeof(scene)/sizeof(sphere)
 
 #if FBDEV			// super secret, compiler-crashing mode
 #include "fbdev/fbdev.h"
@@ -233,7 +228,7 @@ static void render(void* surface, const int w, const int h)
 			//vec3 sample = compute_color(eye, ray); // single sample
 			//set_pixel(surface, x, y, 0xff00ff); // week1
 		}
-		#if 1
+		#if UPDATE
 			#if DEBUG
 			putc(46, stderr);
 			#endif
