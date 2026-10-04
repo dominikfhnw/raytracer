@@ -1,6 +1,6 @@
 SMALL   := -Wl,-z,norelro -Wl,-z,execstack -Wl,-z,noseparate-code -Wl,--build-id=none -Wl,--no-eh-frame-hdr -fno-asynchronous-unwind-tables -fno-stack-clash-protection -fno-stack-protector -fcf-protection=none -no-pie -fno-pie -fno-plt -fwhole-program -Wno-unknown-pragmas
 CFLAGS0 := -g -Wall -Wextra -Wpedantic -std=c99
-CFLAGS  := -Ofast $(CFLAGS0) $(SMALL)
+CFLAGS  := $(CFLAGS0) $(SMALL)
 #FBDEV	:= -Oz -march=i386 -mtune=x86-64 -mfpmath=387 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding -fbuiltin -std=gnu99
 #FBDEV	:= -Oz -march=pentium2 -mtune=native -T fbdev/ldscript -Wl,--nmagic -m32 -DFBDEV -nostdlib -ffreestanding -fbuiltin -std=gnu99
 FBDEV	:= -Oz -march=x86-64-v2 -mfpmath=387 -T fbdev/ldscript -Wl,--nmagic -m32 -DFBDEV -nostdlib -ffreestanding -fbuiltin -std=gnu99
@@ -9,19 +9,20 @@ ASM0	:= -g0 -fverbose-asm -S
 WEEK	:= week3.c
 ASM	=  $(ASM0) -masm=intel -o- 2>/dev/null | grep -vF -e ".loc" -e "\#APP" -e "\#NO_APP" -e "\# 0 " > $@.s
 LIB	:= `sdl2-config --cflags --libs` -lm
+SANIT	:= -fsanitize=undefined -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=leak -fsanitize-address-use-after-scope -fanalyzer
+SANIT	:=
+
 
 .PHONY: week3 week2 week1 clang fb fbxx small dos fbmin
 
 week3 week2 week1:
-	@#$(CC) $(CFLAGS0) -O3 -fopenmp -foffload=disable -DYOLO=0 -o $@ $@.c `sdl2-config --cflags --libs` -lm
-	$(CC) $(CFLAGS0) -O3 -DYOLO=0 -o $@ $@.c $(LIB)
-	@#$(CC) $(CFLAGS0) -O3 -DYOLO=0       $@.c $(LIB) $(ASM)
+	$(CC)  $(CFLAGS0) $(SANIT)     -Ofast -fopenmp -march=native $@.c $(LIB) -o $@
+	@$(CC) $(CFLAGS0) $(SANIT) -g0 -Ofast -fopenmp -march=native $@.c $(LIB) $(ASM)
 	@ls -l $@
 
 small:
-	$(CC)  $(CFLAGS) -DYOLO=1 -Oz -DDEBUG=0 -o $@  $(WEEK) $(LIB)
-	@#$(CC) $(CFLAGS) -DYOLO=1 -E		       $(WEEK) $(LIB) > preproc.c
-	@$(CC) $(CFLAGS) -DYOLO=1 -Oz -DDEBUG=0        $(WEEK) $(LIB) $(ASM)
+	$(CC)  $(CFLAGS) $(SANIT) -DYOLO=1 -Oz -DDEBUG=0 $(WEEK) $(LIB) -o $@
+	@$(CC) $(CFLAGS) $(SANIT) -DYOLO=1 -Oz -DDEBUG=0 $(WEEK) $(LIB) $(ASM)
 	@./fbdev/pack.sh $@
 
 fb:
