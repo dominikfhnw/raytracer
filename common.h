@@ -1,4 +1,6 @@
 #include <float.h>
+#include <stdint.h>
+#include <stdbool.h>
 #define PI		3.14159265358979323846
 
 #define CONST		__attribute__((const,nothrow)) static

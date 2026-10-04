@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <asm-generic/fcntl.h>
 #define _SYS_MMAN_H
 #include <bits/mman-linux.h>
