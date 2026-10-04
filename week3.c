@@ -16,6 +16,9 @@ AI: Google search for "SDL_MUSTLOCK"
 #define NUDGE	0.005
 //#define NUDGE	0.0
 
+#define XORSHIFT 1
+#define NAKED	1
+
 #define GAMMA	2.2
 #ifndef DEBUG
 #define DEBUG	1
@@ -30,10 +33,8 @@ AI: Google search for "SDL_MUSTLOCK"
 #define NUM_SPHERES sizeof(scene)/sizeof(sphere)
 
 #if FBDEV			// super secret, compiler-crashing mode
-#define NAKED	1
 #include "fbdev/fbdev.h"
 #elif DOS
-#define NAKED	1
 #include "dos32/dos.h"
 #else				// boring old SDL
 #include "sdl.h"
