@@ -1,3 +1,16 @@
+#if FLOAT_EXCEPTION
+#include <fenv.h>
+#define ENABLE_FLOAT_EXCEPTIONS feenableexcept( FE_DIVBYZERO | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW )
+#else
+#define ENABLE_FLOAT_EXCEPTIONS
+#endif
+
+#if NO_TLS
+#define __THREAD
+#else
+#define __THREAD __thread
+#endif
+
 #include <float.h>
 #define PI		3.14159265358979323846
 

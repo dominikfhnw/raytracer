@@ -18,6 +18,7 @@ AI: Google search for "SDL_MUSTLOCK"
 
 #define XORSHIFT 1
 #define NAKED	1
+#define FLOAT_EXCEPTION	1
 
 #define GAMMA	2.2
 #ifndef DEBUG
@@ -195,6 +196,7 @@ static void render(void* surface, const int w, const int h)
 	CONSTV vec3 ul		= scalar_mult(u, lambda);
 	CONSTV vec3 fhat	= f;
 
+	ENABLE_FLOAT_EXCEPTIONS;
 	// check if lambda has been precalculated
 	// can only be checked if optimizer is turned on
 #if 1

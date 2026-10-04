@@ -1,7 +1,7 @@
 #if XORSHIFT
 // G. Marsaglia, ‘Xorshift RNGs’, Journal of Statistical Software, vol. 8, pp. 1–6, Jul. 2003, doi: 10.18637/jss.v008.i14.
 
-TLS uint32_t xorshift_state = 2463534242;
+__THREAD uint32_t xorshift_state = 2463534242;
 
 CONSTEXPR uint32_t xorshift32(void)
 {

@@ -1,5 +1,7 @@
+#undef	FLOAT_EXCEPTION
 #undef	DEBUG
 #undef	YOLO
+#define NO_TLS	1		// we don't support TLS
 #define YOLO	1		// take ALL the shortcuts
 #define NDEBUG	1		// no asserts in this minimal libc
 #define assert(x)
