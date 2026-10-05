@@ -45,16 +45,19 @@ CONSTEXPR FLOAT dotP(const vec3 a, const vec3 b)
 	return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
+/*
 CONSTEXPR FLOAT len1(const vec3 a)
 {
 	return SQRT(a.x*a.x + a.y*a.y + a.z*a.z);
 }
+*/
 
 CONSTEXPR FLOAT len(const vec3 a)
 {
 	return SQRT(dotP(a,a));
 }
 
+/*
 CONSTEXPR bool normal(const vec3 a)
 {
 	if (!isfinite(a.x))
@@ -73,6 +76,7 @@ CONSTEXPR vec3 limit(vec3 a, const FLOAT l)
 	a.z = a.z > l ? l : a.z;
 	return a;
 }
+*/
 
 CONSTEXPR vec3 norm(const vec3 a)
 {
@@ -107,9 +111,11 @@ CONSTEXPR vec3 scalar_mult(const vec3 a, const FLOAT amount)
 	return result;
 }
 
+/*
 CONSTEXPR vec3 lerp(const vec3 a, vec3 b, const FLOAT amount)
 {
 	assert(amount >= 0);
 	assert(amount <= 1);
 	return add(scalar_mult(a, amount), scalar_mult(b, 1-amount));
 }
+*/
