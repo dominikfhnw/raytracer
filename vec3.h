@@ -4,28 +4,40 @@ typedef struct vec3 {
 	FLOAT z;
 } vec3;
 
-CONSTEXPR vec3 add(vec3 a, const vec3 b)
+CONSTEXPR vec3 add(const vec3 a, const vec3 b)
 {
-	a.x = a.x + b.x;
-	a.y = a.y + b.y;
-	a.z = a.z + b.z;
-	return a;
+	vec3 result;
+	result.x = a.x + b.x;
+	result.y = a.y + b.y;
+	result.z = a.z + b.z;
+	return result;
 }
 
-CONSTEXPR vec3 sub(vec3 a, const vec3 b)
+CONSTEXPR vec3 sub(const vec3 a, const vec3 b)
 {
-	a.x = a.x - b.x;
-	a.y = a.y - b.y;
-	a.z = a.z - b.z;
-	return a;
+	vec3 result;
+	result.x = a.x - b.x;
+	result.y = a.y - b.y;
+	result.z = a.z - b.z;
+	return result;
 }
 
-CONSTEXPR vec3 hadamard(vec3 a, const vec3 b)
+CONSTEXPR vec3 hadamard(const vec3 a, const vec3 b)
 {
-	a.x = a.x * b.x;
-	a.y = a.y * b.y;
-	a.z = a.z * b.z;
-	return a;
+	vec3 result;
+	result.x = a.x * b.x;
+	result.y = a.y * b.y;
+	result.z = a.z * b.z;
+	return result;
+}
+
+CONSTEXPR vec3 changesign(const vec3 a)
+{
+	vec3 result;
+	result.x = -a.x;
+	result.y = -a.y;
+	result.z = -a.z;
+	return result;
 }
 
 CONSTEXPR FLOAT dotP(const vec3 a, const vec3 b)
@@ -62,13 +74,14 @@ CONSTEXPR vec3 limit(vec3 a, const FLOAT l)
 	return a;
 }
 
-CONSTEXPR vec3 norm(vec3 a)
+CONSTEXPR vec3 norm(const vec3 a)
 {
 	FLOAT l = len(a);
-	a.x = a.x / l;
-	a.y = a.y / l;
-	a.z = a.z / l;
-	return a;
+	vec3 result;
+	result.x = a.x / l;
+	result.y = a.y / l;
+	result.z = a.z / l;
+	return result;
 }
 
 CONSTEXPR vec3 normV(const vec3 a, const vec3 b)
@@ -85,12 +98,13 @@ CONSTEXPR vec3 crossP(const vec3 a, const vec3 b)
 	return result;
 }
 
-CONSTEXPR vec3 scalar_mult(vec3 a, const FLOAT amount)
+CONSTEXPR vec3 scalar_mult(const vec3 a, const FLOAT amount)
 {
-	a.x = a.x * amount;
-	a.y = a.y * amount;
-	a.z = a.z * amount;
-	return a;
+	vec3 result;
+	result.x = a.x * amount;
+	result.y = a.y * amount;
+	result.z = a.z * amount;
+	return result;
 }
 
 CONSTEXPR vec3 lerp(const vec3 a, vec3 b, const FLOAT amount)
