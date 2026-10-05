@@ -3,7 +3,7 @@
 
 __THREAD uint32_t xorshift_state = 2463534242;
 
-CONSTEXPR uint32_t xorshift32(void)
+ONLYCE uint32_t xorshift32(void)
 {
 	uint32_t x = xorshift_state;
 	x ^= x << 13;
@@ -27,7 +27,7 @@ CONSTEXPR uint32_t xorshift32(void)
 #if XORSHIFT && FLOAT == float
 // inspired by https://blog.bithole.dev/blogposts/random-float/
 // returns a floating point number between -1 and +1
-CONSTEXPR float frand(void)
+ONLYCE float frand(void)
 {
 	int total_bits		=  32;
 	int fraction_bits	=  23;
@@ -47,7 +47,7 @@ CONSTEXPR float frand(void)
 
 #else
 // the same, but worse
-CONSTEXPR FLOAT frand(void)
+ONLYCE FLOAT frand(void)
 {
 	return (FLOAT) ( ((FLOAT)RAND() - ((FLOAT)RMAX/2.0) ) / (FLOAT)RMAX);
 }

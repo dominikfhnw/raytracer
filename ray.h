@@ -33,7 +33,7 @@ CONSTEXPR uint32_t colormap(const vec3 color)
 }
 
 #if NEWRAND
-CONSTEXPR vec3 randvecNEW(void)
+ONLYCE vec3 randvecNEW(void)
 {
 	float u = int_to_float(xorshift32());
 	assert(u >= 0);
@@ -54,14 +54,14 @@ CONSTEXPR vec3 randvecNEW(void)
 }
 #endif
 
-CONSTEXPR vec3 randvecOLD(void)
+ONLYCE vec3 randvecOLD(void)
 {
 	vec3 rand = { frand(), frand(), frand() };
 	rand = norm(rand);
 	return rand;
 }
 
-CONSTEXPR vec3 randvec(void)
+ONLYCE vec3 randvec(void)
 {
 	vec3 rand;
 #if NEWRAND
