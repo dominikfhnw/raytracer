@@ -1,14 +1,3 @@
-#define STATIC 1
-#if STATIC
-#define CALL regparm(3)
-#define FUNC __attribute__((always_inline,CALL)) static inline
-#else
-#define FUNC
-#endif
-
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <asm-generic/fcntl.h>
 #define _SYS_MMAN_H
 #include <bits/mman-linux.h>
@@ -61,11 +50,6 @@ typedef signed long long int off_t;
 #undef	NAKED
 #endif
 
-#if __cplusplus
-#define NOMANGLE extern "C"
-#else
-#define NOMANGLE
-#endif
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -175,7 +159,6 @@ static void exit(int status){
 	__builtin_unreachable();
 }
 
-#define CONSTF	__attribute__((const,nothrow)) static
 #if ENABLE_TAN
 CONSTF float tanf(float arg0) {
 	float ret;
@@ -198,11 +181,6 @@ CONSTF double tan(double arg0) {
 }
 #endif
 
-#if __cplusplus >= 202002L
-#define LIBCONSTEXPR constexpr CONSTF
-#else
-#define LIBCONSTEXPR CONSTF
-#endif
 LIBCONSTEXPR __attribute__((always_inline)) float sqrtf(float arg0) {
 	float ret;
 	if (__builtin_constant_p(arg0)) {
