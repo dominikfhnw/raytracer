@@ -63,6 +63,13 @@ static void check(const void* const ptr, const char* const str)
 
 #define xstr(s) str(s)
 #define str(s) #s
+#if _OPENMP
+#define OMP " omp"
+#else
+#define OMP
+#endif
+#define STATUS "dominikr samples " xstr(SAMPLES) " P " xstr(P) OMP
+
 int main(void)
 {
 	dprintf("START\n");
@@ -72,8 +79,9 @@ int main(void)
 			return 2;
 		#endif
 	}
-	SDL_Window* window = SDL_CreateWindow("dominikr samples " xstr(SAMPLES) " P " xstr(P) ,
+	SDL_Window* window = SDL_CreateWindow(STATUS ,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, 0);
+	dprintf(STATUS "\n");
 	check(window, "window init failed");
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	check(surface, "getsurface failed");
