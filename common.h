@@ -31,6 +31,14 @@
 #endif
 #define dvec(a) dprintf("vec %-8s%f %f %f\n", #a, a.x, a.y, a.z)
 
+#if TRACE
+#define tprintf(...) dprintf(__VA_ARGS__)
+#define tvec(a) dprintf("vec %-8s%f %f %f\n", #a, a.x, a.y, a.z)
+#else
+#define tprintf(...)
+#define tvec(a)
+#endif
+
 #if FLOAT == float
 #define POW(x,y)	powf(x,y)
 #define SQRT(x)		sqrtf(x)
