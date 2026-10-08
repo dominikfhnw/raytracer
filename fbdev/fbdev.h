@@ -30,7 +30,7 @@ FUNC void clear(uint32_t* fb)
 FUNC void set_pixel(void *surface, int x, int y, uint32_t pixel)
 {
 	// XXX constant "4"
-	uint32_t* target_pixel = (uint32_t*)surface + (y * WIDTH) + x;
+	uint32_t* target_pixel = (uint32_t*)surface + (y * STRIDE) + x;
         *target_pixel = pixel;
 }
 
@@ -49,14 +49,14 @@ NOMANGLE __attribute__((used,noreturn,GCCATTR)) void _start(void){
 	#if NAKED
 	//__asm__ __volatile__(INIT_BP);
 	#endif
-	int fd = open("/dev/fb0", O_RDWR);
+	//int fd = open("/dev/fb0", O_RDWR);
 	#if 0
 		if(fd < 0){
 			__asm__ __volatile__("int3\n\t");
 			__builtin_unreachable();
 		}
 	#endif
-	void* mem = mmap(NULL, SIZE, PROT_WRITE, MAP_SHARED, fd, 0);
+	void* mem = mmap(NULL, SIZE, PROT_WRITE, MAP_SHARED, 0, 0);
 	render(mem, WIDTH, HEIGHT);
 	//exit(0);
 	wait();

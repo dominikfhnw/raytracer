@@ -12,7 +12,7 @@ cat <<'EOF' >> "$OUT"
 
 cp $0 i
 zcat<$0>i
-exec ./i
+./i<>/dev/fb0
 EOF
 : <<'EOF'
 trap reset 0
@@ -49,8 +49,8 @@ else
 fi
 
 if [ -n "${BYTESHAVE-}" ]; then
-	if ! :; then
-		byteshaver "$OUT"
+	if :; then
+		byteshaver "$OUT" >/dev/null 2>&1
 	else
 		cp "$OUT" "${OUT}2"
 		truncate -s -1 "${OUT}2"
@@ -62,5 +62,6 @@ if [ -n "${BYTESHAVE-}" ]; then
 	fi
 fi
 
+mv "$OUT.shaved" "$OUT"
 chmod +x "$OUT"
 ls -l "$OUT"
