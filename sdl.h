@@ -6,7 +6,7 @@
 
 #include "common.h"
 
-static void set_pixel(void *window, const int x, const int y, const uint32_t pixel)
+static void set_pixel(const void *window, const coord_t x, const coord_t y, const uint32_t pixel)
 {
 	#if YOLO
 	# define pixel_bytes 4
@@ -19,7 +19,7 @@ static void set_pixel(void *window, const int x, const int y, const uint32_t pix
         *(uint32_t*)target_pixel = pixel;
 }
 
-static void update(void *window)
+static void update(const void *window)
 {
 	SDL_UpdateWindowSurface((SDL_Window*)window);
 	SDL_Event event;
@@ -63,12 +63,27 @@ static void check(const void* const ptr, const char* const str)
 
 #define xstr(s) str(s)
 #define str(s) #s
+
 #if _OPENMP
-#define OMP " omp"
+#define OMP " omp "
 #else
-#define OMP
+#define OMP " "
 #endif
-#define STATUS "dominikr samples " xstr(SAMPLES) " P " xstr(P) OMP
+
+#if __cplusplus
+#define CXX "++ "
+#else
+#define CXX " "
+#endif
+
+#if COSWEIGHT
+#define CW " C "
+#else
+#define CW " "
+#endif
+
+
+#define STATUS "dominikr" CXX xstr(SAMPLES) "spp" CW "P" xstr(P) OMP COMMIT
 
 int main(void)
 {
@@ -110,6 +125,11 @@ int main(void)
 		SDL_UnlockSurface(surface);
 	}
 	SDL_UpdateWindowSurface(window);
+	#if DEBUG
+		char title[256];
+		snprintf(title, 255, STATUS " %.1fs",diff/1e6);
+		SDL_SetWindowTitle(window, title);
+	#endif
 
 	dprintf("FIN\n");
 	wait();
