@@ -47,10 +47,10 @@ static void wait(void)
 
 NOMANGLE __attribute__((used,noreturn,GCCATTR)) void _start(void){
 	#if NAKED
-	__asm__ __volatile__(INIT_BP);
+	//__asm__ __volatile__(INIT_BP);
 	#endif
 	int fd = open("/dev/fb0", O_RDWR);
-	#if 1
+	#if 0
 		if(fd < 0){
 			__asm__ __volatile__("int3\n\t");
 			__builtin_unreachable();

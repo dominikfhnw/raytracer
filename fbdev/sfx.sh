@@ -41,20 +41,24 @@ for i in `awk '{if($3~"tmpfs"&&$4!~"noexec"){print$2}}' /etc/mtab`;do [ -w $i ]&
 
 EOF
 printf "\0" >> "$OUT"
-if [ -n "${RELEASE-}" ]; then
+if [ "${RELEASE-0}" -ge 1 ]; then
+	echo RELEASE
 	zopfli --i5000 --deflate -c "$IN" >> "$OUT"
 else
 	zopfli --deflate -c "$IN" >> "$OUT"
 fi
 
 if [ -n "${BYTESHAVE-}" ]; then
-	#byteshaver "$OUT"
-	cp "$OUT" "${OUT}2"
-	truncate -s -1 "${OUT}2"
-	if cmp -s <(zcat<"$OUT" 2>/dev/null) <(zcat<"${OUT}2" 2>/dev/null); then
-		mv "${OUT}2" "${OUT}"
+	if ! :; then
+		byteshaver "$OUT"
 	else
-		rm "${OUT}2"
+		cp "$OUT" "${OUT}2"
+		truncate -s -1 "${OUT}2"
+		if cmp -s <(zcat<"$OUT" 2>/dev/null) <(zcat<"${OUT}2" 2>/dev/null); then
+			mv "${OUT}2" "${OUT}"
+		else
+			rm "${OUT}2"
+		fi
 	fi
 fi
 
