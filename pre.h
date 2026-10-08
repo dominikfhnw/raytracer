@@ -28,9 +28,6 @@
 #define ONLYCE		static
 #endif
 
-#define CONSTF  CONST
-#define LIBCONSTEXPR CONSTEXPR
-
 #if __cplusplus
 #define NOMANGLE extern "C"
 #else

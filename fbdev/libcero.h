@@ -160,7 +160,7 @@ static void exit(int status){
 }
 
 #if ENABLE_TAN
-CONSTF float tanf(float arg0) {
+CONST float tanf(float arg0) {
 	float ret;
 	__asm__ __volatile__(
 		"fptan\n\t"
@@ -170,7 +170,7 @@ CONSTF float tanf(float arg0) {
 	return ret;
 }
 
-CONSTF double tan(double arg0) {
+CONST double tan(double arg0) {
 	double ret;
 	__asm__ __volatile__(
 		"fptan\n\t"
@@ -181,7 +181,7 @@ CONSTF double tan(double arg0) {
 }
 #endif
 
-LIBCONSTEXPR __attribute__((always_inline)) float sqrtf(float arg0) {
+CONSTEXPR __attribute__((always_inline)) float sqrtf(float arg0) {
 	float ret;
 	if (__builtin_constant_p(arg0)) {
 		return __builtin_sqrtf(arg0);
@@ -193,7 +193,7 @@ LIBCONSTEXPR __attribute__((always_inline)) float sqrtf(float arg0) {
 	return ret;
 }
 
-CONSTF double sqrt(double arg0) {
+CONST double sqrt(double arg0) {
 	double ret;
 	__asm__ __volatile__(
 		"fsqrt\n\t"
