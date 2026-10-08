@@ -42,7 +42,7 @@ ONLYCE float frand(void)
 	uint32_t exp;
 	float off;
 
-	off = 3;
+	off = 3; // FLOAT CONST
 	exp = 1;
 
 	mask = (exp+exp_offset) << fraction_bits;

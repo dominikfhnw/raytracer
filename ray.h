@@ -3,18 +3,25 @@ typedef struct sphere {
 	FLOAT	radius;
 	vec3	diffuse;
 	vec3	emission;
+	uint8_t	material;
 } sphere;
 
+typedef uint_least8_t color_t;
+typedef int_least16_t coord_t;
 
-CONSTEXPR uint8_t map_component(FLOAT c)
+CONSTEXPR color_t map_component(FLOAT c)
 {
+#if 1
 	if (c > 1)
 		c = 1;
+#endif
+#if 0
 	if (c < 0)
 		c = 0;
+#endif
 
 	#if YOLO				// assumes GAMMA == 2.0
-		return 255 * SQRT(c);
+		return 255 * SQRT(c);		// 255 -> FLOAT CONST
 	#else
 		return 255 * POW(c, 1/GAMMA);
 	#endif
@@ -23,9 +30,9 @@ CONSTEXPR uint8_t map_component(FLOAT c)
 
 CONSTEXPR uint32_t colormap(const vec3 color)
 {
-	uint8_t r = map_component(color.x);
-	uint8_t g = map_component(color.y);
-	uint8_t b = map_component(color.z);
+	color_t r = map_component(color.x);
+	color_t g = map_component(color.y);
+	color_t b = map_component(color.z);
 
 	//dprintf("lin %u %u %u\n", r, g, b);
 	return (r << 16) + (g << 8) + (b << 0); // bgra32
