@@ -1,14 +1,20 @@
 #if XORSHIFT
 // G. Marsaglia, ‘Xorshift RNGs’, Journal of Statistical Software, vol. 8, pp. 1–6, Jul. 2003, doi: 10.18637/jss.v008.i14.
 
-__THREAD uint32_t xorshift_state = 2463534242;
+//__THREAD uint32_t xorshift_state = 2463534242;
+__THREAD uint32_t xorshift_state = 0;
 
 ONLYCE uint32_t xorshift32(void)
 {
 	uint32_t x = xorshift_state;
+#if 0
 	x ^= x << 13;
 	x ^= x >> 17;
 	x ^= x << 5;
+#else
+	x *= 134775813;
+	x++;
+#endif
 	xorshift_state = x;
 	return x;
 }
