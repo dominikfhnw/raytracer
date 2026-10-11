@@ -4,7 +4,7 @@
 //__THREAD uint32_t xorshift_state = 2463534242;
 __THREAD uint32_t xorshift_state = 0;
 
-ONLYCE uint32_t xorshift32(void)
+static uint32_t my_rand(void)
 {
 	uint32_t x = xorshift_state;
 #if 0
@@ -33,7 +33,7 @@ ONLYCE uint32_t xorshift32(void)
 #if XORSHIFT && FLOAT == float
 // inspired by https://blog.bithole.dev/blogposts/random-float/
 // returns a floating point number between -1 and +1
-ONLYCE float frand(void)
+static float frand(void)
 {
 	int total_bits		=  32;
 	int fraction_bits	=  23;
@@ -53,7 +53,7 @@ ONLYCE float frand(void)
 
 #else
 // the same, but worse
-ONLYCE FLOAT frand(void)
+static FLOAT frand(void)
 {
 	return (FLOAT) ( ((FLOAT)RAND() - ((FLOAT)RMAX/2.0) ) / (FLOAT)RMAX);
 }

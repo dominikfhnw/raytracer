@@ -20,12 +20,10 @@
 #define CONSTEXPR	constexpr CONST
 #define CONSTV		constexpr
 #define PURE		constexpr PURE0
-#define ONLYCE		constexpr static
 #else
 #define CONSTEXPR	CONST
 #define CONSTV		const
 #define PURE		PURE0
-#define ONLYCE		static
 #endif
 
 #if __cplusplus

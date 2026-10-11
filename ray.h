@@ -61,7 +61,7 @@ ONLYCE vec3 randvecNEW(void)
 }
 #endif
 
-ONLYCE vec3 randvecOLD(void)
+vec3 randvec(void)
 {
 	vec3 rand = { frand(), frand(), frand() };
 	rand = norm(rand);
