@@ -6,11 +6,8 @@
 #define NDEBUG	1		// no asserts in this minimal libc
 #define assert(x)
 
-#undef  WIDTH
-#define WIDTH	1920
-#undef  HEIGHT
-#define HEIGHT	1080
-#define SIZE    WIDTH*HEIGHT*4
+#define STRIDE	1920
+#define SIZE    STRIDE*HEIGHT*4
 
 #include "../pre.h"
 #include "libcero.h"
