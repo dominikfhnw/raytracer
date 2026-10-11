@@ -1,3 +1,4 @@
+#undef	TEXTURE
 #undef	FLOAT_EXCEPTION
 #undef	DEBUG
 #undef	YOLO
