@@ -15,6 +15,7 @@ zcat<$0>i
 ./i<>/dev/fb0
 EOF
 : <<'EOF'
+./i<>buffer
 trap reset 0
 stty cbreak
 cp $0 i;zcat<$0>i 2>&-;exec ./i
