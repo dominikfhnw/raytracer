@@ -24,8 +24,8 @@ CONSTV __attribute__((aligned(1))) sphere scene[] = {
 //	{ {-1001,     0,    0}, 1000, RED,    BLACK,   0 },	// a 0
 //	{ { 1001,     0,    0}, 1000, BLUE,   BLACK,   0 },	// b 1
 //	{ {    0,     0, 1001}, 1000, GRAY,   BLACK,   0 },	// c 2
-	{ {    0, -1000.8,   0}, 1000, GRAY,   BLACK,   0 },	// d 3
-	{ {    0,  1001,    0}, 1000, BLACK,  BLACK,   2 },	// e 4
+	{ {    0, -1000.8,   0}, 1000, GRAY,   BLACK,   1 },	// d 3
+	{ {    0,  1001,    0}, 1000, BLACK,  BLACK,   0 },	// e 4
 	{ {    0,  4.95,    0},    4, BLACK,  WHITE10, 0 },	// e 4
 	{ { -0.5,  -0.5, -0.6},  0.3, YELLOW, BLACK,   2 },	// f 5
 	{ { 0.6,  -0.6, -0.6},  0.2, GREEN, BLACK,   2 },	// f 5

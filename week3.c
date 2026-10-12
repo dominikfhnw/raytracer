@@ -25,7 +25,7 @@ minifying todo:
 #define UPDATE		1	// update screen while calculation is running
 #define BLUR_VAL	0.23
 #define OLDEYE		0	// old eye ray calc. new one doesn't work with alt.persp.
-#define COSWEIGHT	0	// cosine-weighted distribution
+#define COSWEIGHT	1	// cosine-weighted distribution
 
 #define WIDTH		600	// image width
 #define HEIGHT		600	// image height
