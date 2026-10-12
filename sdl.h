@@ -82,8 +82,13 @@ static void check(const void* const ptr, const char* const str)
 #define CW " "
 #endif
 
+#if FIXED
+#define DP "F"
+#else
+#define DP "P" xstr(P) " D"
+#endif
 
-#define STATUS "dominikr" CXX xstr(SAMPLES) "spp" CW "P" xstr(P) OMP COMMIT
+#define STATUS "dominikr" CXX xstr(SAMPLES) "spp" CW DP xstr(MINDEPTH) OMP COMMIT
 
 int main(void)
 {
