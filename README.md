@@ -6,12 +6,17 @@ Written in C/C++ and SDL2. Also works with the `sdl2-compat` layer.
 `make`
 
 ## alternative graphical frontend
+
 There's an alternative frontend using the linux framebuffer device (`/dev/fb0`),
 and without using any libraries (compiled using `-ffreestanding`).
 
 All the files related to that are in the separate `fbdev` directory. All the code
 was written by me, over the course of the last few years. It is not part of my
 graded submission.
+
+`make fbxx`
+
+Total size ~1200-2000 byte, depending on options and compiler used.
 
 ## LLM prompts used
 The search term `SDL_MUSTLOCK` was typed into the Google search engine,
@@ -27,3 +32,7 @@ The following prompt was used with Google search "AI Mode":
 ![Scene, frontal perspective](screenshots/comgr-week2a.png)
 
 ![Scene, alternative perspective](screenshots/comgr-week2b.png)
+### Cornell box with emissive and reflective spheres, antialiasing and defocus blur
+![Scene, frontal perspective](screenshots/comgr-blur.png)
+### Own scene with bitmap textures
+![Own scene](screenshots/comgr-newscene.png)
