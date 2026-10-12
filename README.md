@@ -2,6 +2,8 @@ Code for the computer graphics course HS26, by dominikr
 
 Written in C/C++ and SDL2. Also works with the `sdl2-compat` layer.
 
+Github repo: https://github.com/dominikfhnw/raytracer/
+
 ## Build
 `make`
 
