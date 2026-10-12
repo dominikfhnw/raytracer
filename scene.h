@@ -10,7 +10,9 @@
 #define WHITE2	{   2,   2,   2 }
 #define WHITE10	{  6,  6,  6 }
 
-#define UP	{   0,   1,   0 }
+#define UP	{   0, 1,   0 }
+
+#define FOCAL_LENGTH  3.4
 
 #if PERSPECTIVE2
 #define EYE	{-0.9,-0.5, 0.9 }
@@ -23,7 +25,7 @@
 #endif
 
 #if 1
-CONSTV sphere scene[] = {
+CONSTV __attribute__((aligned(1))) sphere scene[] = {
 	{ {    0,     0,    0},    0, BLACK,  BLACK,   0 },	// null object - color used when no ray hits
 	{ {-1001,     0,    0}, 1000, RED,    BLACK,   0 },	// a 0
 	{ { 1001,     0,    0}, 1000, BLUE,   BLACK,   0 },	// b 1
