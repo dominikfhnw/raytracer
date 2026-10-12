@@ -6,6 +6,14 @@
 
 #include "common.h"
 
+#include <SDL_image.h>
+SDL_Surface* image;
+static uint32_t get_pixel(const SDL_Surface *surface, const coord_t x, const coord_t y)
+{
+	uint8_t *target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * surface->format->BytesPerPixel);
+        return *(uint32_t*)target_pixel;
+}
+
 static void set_pixel(const void *window, const coord_t x, const coord_t y, const uint32_t pixel)
 {
 	#if YOLO
@@ -105,6 +113,11 @@ int main(void)
 	check(window, "window init failed");
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	check(surface, "getsurface failed");
+
+	//image = SDL_ConvertSurface(IMG_Load("desire4.png"), surface->format, 0);
+	image = IMG_Load("desire4.png");
+	check(image, "loading img failed");
+	dprintf("Image %dx%d\n", image->w, image->h);
 
 	if (SDL_MUSTLOCK(surface) && !YOLO) {
 		SDL_LockSurface(surface);
