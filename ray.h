@@ -9,7 +9,7 @@ typedef struct sphere {
 typedef uint_least8_t color_t;
 typedef int_least16_t coord_t;
 
-CONSTEXPR color_t map_component(FLOAT c)
+CONSTEXPR __attribute__((always_inline)) color_t map_component(FLOAT c)
 {
 #if 1
 	if (c > 1)
@@ -39,24 +39,13 @@ CONSTEXPR uint32_t colormap(const vec3 color)
 	// return (r << 0) + (g << 8) + (b << 16); // rgba32
 }
 
-#if NEWRAND
-ONLYCE vec3 randvecNEW(void)
+#if TEXTURE
+CONSTEXPR vec3 reverse_color(const uint32_t color)
 {
-	float u = int_to_float(xorshift32());
-	assert(u >= 0);
-	assert(u <= 1);
-	float v = int_to_float(xorshift32());
-	assert(v >= 0);
-	assert(v <= 1);
-	float rad = PI/180;
-	float theta = 2.0f * PI * u;
-	float phi = acos(2.0f * v - 1.0f);
-
-	float x = cos(theta) * sin(phi) * rad;
-	float y = sin(theta) * sin(phi) * rad;
-	float z = cos(phi) * rad;
-
-	vec3 result = {x, y, z};
+	vec3 result;
+	result.z = pow((FLOAT)(color & 0x00FF) / 255.0, GAMMA);
+	result.y = pow((FLOAT)( (color & 0xFF00)>>8 ) / 255.0, GAMMA);
+	result.x = pow((FLOAT)( (color & 0xFF0000)>>16 ) / 255.0, GAMMA);
 	return result;
 }
 #endif
@@ -65,26 +54,5 @@ vec3 randvec(void)
 {
 	vec3 rand = { frand(), frand(), frand() };
 	rand = norm(rand);
-	return rand;
-}
-
-ONLYCE vec3 randvec(void)
-{
-	vec3 rand;
-#if NEWRAND
-	rand = randvecNEW();
-#else
-	rand = randvecOLD();
-#endif
-
-#if 0
-	FLOAT l = dotP(rand,rand);
-	if (l > 1.0+EPSILON) {
-		dvec(rand);
-		dprintf("ERR %f\n",l);
-		exit(4);
-	}
-	assert(l <= 1.0+EPSILON);
-#endif
 	return rand;
 }
