@@ -7,6 +7,7 @@ minifying todo:
 * storing radius^2 instead of radius could save a bit
 * using smaller data format for the scene *could* save some space,
   but deflate is quite good at compacting it already
+* if SAMPLES is 256: directly convert into 8bit by converting fp to char?
 * simplify more stuff, rewrite stuff in assembler
 
 
@@ -19,7 +20,7 @@ minifying todo:
 
 #define WIDTH		600	// image width
 #define HEIGHT		600	// image height
-#define GAMMA		2.2	// image gamme
+#define GAMMA		2.0	// image gamme
 
 #define FLOAT_EXCEPTION	0	// croak if something's wrong with a float
 #ifndef DEBUG
