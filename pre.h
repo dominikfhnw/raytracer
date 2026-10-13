@@ -4,6 +4,15 @@
 # endif
 #endif
 
+#ifndef NOSIMD
+# define _MM_MALLOC_H_INCLUDED
+# if __FMA__
+#  include <immintrin.h>
+# else
+#  include <smmintrin.h>
+# endif
+#endif
+
 #ifndef YOLO
 #define YOLO 0
 #endif
