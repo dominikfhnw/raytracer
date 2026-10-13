@@ -20,11 +20,11 @@
 #define dprintf(...)
 #define NDEBUG 1
 #endif
-#define dvec(a) dprintf("vec %-8s%f %f %f\n", #a, a.x, a.y, a.z)
+#define dvec(a) dprintf("vec %-8s%f %f %f\n", #a, a[0], a[1], a[2])
 
 #if TRACE
 #define tprintf(...) dprintf(__VA_ARGS__)
-#define tvec(a) dprintf("vec %-8s%f %f %f\n", #a, a.x, a.y, a.z)
+#define tvec(a) dprintf("vec %-8s%f %f %f\n", #a, a[0], a[1], a[2])
 #else
 #define tprintf(...)
 #define tvec(a)
@@ -32,12 +32,12 @@
 
 #if FLOAT == float
 #define POW(x,y)	powf(x,y)
-#define SQRT(x)		sqrtf(x)
+#define SQRT(x)		__builtin_sqrtf(x)
 #define TAN(x)		__builtin_tanf(x)
 #define FLOAT_MAX	FLT_MAX
 #else
 #define POW(x,y)	pow(x,y)
-#define SQRT(x)		sqrt(x)
+#define SQRT(x)		__builtin_sqrt(x)
 #define TAN(x)		__builtin_tan(x)
 #define FLOAT_MAX	DBL_MAX
 #endif
