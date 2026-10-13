@@ -33,14 +33,14 @@ AI: Google search for "SDL_MUSTLOCK"
 #include "sdl.h"
 #endif
 
-void render(void* surface, int w, int h)
+void render(void* surface)
 {
 	vec3 red  = { 1, 0, 0 };
 	vec3 green  = { 0, 1, 0 };
 	
-	for(int j=0; j < h; j++){
-		for(int i=0; i < w; i++){
-			FLOAT amount = (FLOAT)i/(FLOAT)w;
+	for(int j=0; j < HEIGHT; j++){
+		for(int i=0; i < WIDTH; i++){
+			FLOAT amount = (FLOAT)i/(FLOAT)WIDTH;
 			vec3 color = lerp(green, red, amount);
 			dprintf("amount %f\n", amount);
 			uint32_t pixel = colormap(color);
