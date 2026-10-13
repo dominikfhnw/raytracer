@@ -55,7 +55,7 @@ NOMANGLE __attribute__((used,noreturn,GCCATTR)) void _start(void){
 		}
 	#endif
 	void* mem = mmap(NULL, SIZE, PROT_WRITE, MAP_SHARED, 0, 0);
-	render(mem, WIDTH, HEIGHT);
+	render(mem);
 #if EXIT
 	exit(0);
 #else

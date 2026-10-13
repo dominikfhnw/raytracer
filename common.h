@@ -45,4 +45,4 @@
 #include "vec3.h"
 #include "rand.h"
 #include "ray.h"
-static void render(void*, coord_t, coord_t);
+static void render(void*);

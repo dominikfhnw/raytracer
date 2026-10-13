@@ -133,7 +133,7 @@ int main(void)
 
 		gettimeofday(&tv1,NULL);
 	#endif
-	render(window, surface->w, surface->h);
+	render(window);
 	#if DEBUG
 		gettimeofday(&tv2,NULL);
 

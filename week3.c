@@ -275,7 +275,7 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 	return add(scene[num].emission,moo);
 }
 
-static void render(void* surface, const coord_t w, const coord_t h)
+static void render(void* surface)
 {
 	CONSTV vec3 eye		= EYE;
 	CONSTV vec3 look	= LOOK;
