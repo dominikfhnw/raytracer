@@ -1,0 +1,74 @@
+/*
+
+Scene optimized for fbdev:
+ - no textures
+ - focus on front balls
+
+*/
+
+#define RED	{ 0.5,   0,   0 }
+#define GREEN	{   0, 0.5,   0 }
+#define BLUE	{   0,   0, 0.6 }
+#define CYAN	{ 0.0, 0.8, 0.8 }
+#define PINK	{ 0.8,   0, 0.8 }
+#define GRAY	{ 0.5, 0.5, 0.5 }
+#define WHITE	{   1,   1,   1 }
+#define YELLOW	{ 0.8, 0.8,   0 }
+#define BLACK	{   0,   0,   0 }
+#define WHITE2	{   2,   2,   2 }
+#define WHITE10	{  6,  6,  6 }
+
+#define FOCAL_LENGTH  3.4
+
+#define UP	{   0,  1,   0 }
+
+#define EYE	{   0,   0,  -4 }
+#define LOOK	{   0,   0,   6 }
+#define FOV	36
+
+#if 1
+CONSTV __attribute__((aligned(1))) sphere scene[] = {
+	{ {    0,     0,    0},    0, BLACK,  BLACK,   0 },	// null object - color used when no ray hits
+//	{ {-1001,     0,    0}, 1000, RED,    BLACK,   0 },	// a 0
+//	{ { 1001,     0,    0}, 1000, BLUE,   BLACK,   0 },	// b 1
+//	{ {    0,     0, 1001}, 1000, GRAY,   BLACK,   0 },	// c 2
+	{ {    0, -1000.8,   0}, 1000*1000, GRAY,   BLACK,   0 },	// d 3
+	{ {    0,  1001,    0}, 1000*1000, BLACK,  BLACK,   0 },	// e 4
+	{ {    0,  4.95,    0},    4*4, BLACK,  WHITE10, 0 },	// e 4
+	{ { -0.5,  -0.5, -0.6},  0.3*0.3, YELLOW, BLACK,   2 },	// f 5
+	{ { 0.6,  -0.6, -0.6},  0.2*0.2, GREEN, BLACK,   2 },	// f 5
+	//{ { -1.6,  -0.5, -0.6},  0.3, CYAN, BLACK,   2 },	// f 5
+	{ {  0.3,  -0.2,  0.3},  0.6*0.6, PINK,   BLACK,   1 },	// g 6
+//	{ {  -0.4,  0.1,  1.4},  0.9, CYAN,   BLACK,   1},	// g 6
+};
+
+#else
+// scene from https://www.kevinbeason.com/smallpt/
+// will also need new eye/lookat vectors
+sphere scene[] = {
+	{ { 1e5+1,40.8,81.6 }, 1e5, {.75,.25,.25}, BLACK },
+	{ {-1e5+99,40.8,81.6}, 1e5, {.25,.25,.75}, BLACK },
+	{ {50,40.8, 1e5     }, 1e5, {.75,.75,.75}, BLACK },
+	//{ {50,40.8,-1e5+170 }, 1e5, BLACK        ,{12,12,12} },
+	{ {50, 1e5, 81.6    }, 1e5, {.75,.75,.75}, BLACK },
+	{ {50,-1e5+81.6,81.6}, 1e5, {.75,.75,.75}, BLACK },
+	{ {27,16.5,47       }, 1e5, {0.999,0.999,0.999},BLACK },
+	{ {73,16.5,78       }, 1e5, {0.999,0.999,0.999},BLACK },
+	{ {50,681.6-.27,81.6}, 600, BLACK, {12,12,12} },
+};
+
+/*
+ Sphere spheres[] = {//Scene: radius, position, emission, color, material
+   Sphere(1e5, Vec( 1e5+1,40.8,81.6), Vec(),Vec(.75,.25,.25),DIFF),//Left
+   Sphere(1e5, Vec(-1e5+99,40.8,81.6),Vec(),Vec(.25,.25,.75),DIFF),//Rght
+   Sphere(1e5, Vec(50,40.8, 1e5),     Vec(),Vec(.75,.75,.75),DIFF),//Back
+   Sphere(1e5, Vec(50,40.8,-1e5+170), Vec(),Vec(),           DIFF),//Frnt
+   Sphere(1e5, Vec(50, 1e5, 81.6),    Vec(),Vec(.75,.75,.75),DIFF),//Botm
+   Sphere(1e5, Vec(50,-1e5+81.6,81.6),Vec(),Vec(.75,.75,.75),DIFF),//Top
+   Sphere(16.5,Vec(27,16.5,47),       Vec(),Vec(1,1,1)*.999, SPEC),//Mirr
+   Sphere(16.5,Vec(73,16.5,78),       Vec(),Vec(1,1,1)*.999, REFR),//Glas
+   Sphere(600, Vec(50,681.6-.27,81.6),Vec(12,12,12),  Vec(), DIFF) //Lite
+ };
+*/
+
+#endif
