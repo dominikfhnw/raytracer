@@ -143,7 +143,7 @@ CONST FLOAT getlambda(void)
 	return TAN(fov_rad/2);
 }
 
-void render(void* surface, int w, int h)
+void render(void* surface)
 {
 	const vec3 eye		= EYE;
 	const vec3 f		= norm(sub((vec3)LOOK, eye));
@@ -168,12 +168,12 @@ void render(void* surface, int w, int h)
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
 	//dprintf("sqrt(-1) = %f\n", SQRT(-1));
 
-	for(int y=0; y < h; y++){
-		FLOAT fy = screen_convert(h, y);
+	for(int y=0; y < HEIGHT; y++){
+		FLOAT fy = screen_convert(HEIGHT, y);
 		// TODO: precompute as many things from the eye ray already here
-		for(int x=0; x < w; x++){
+		for(int x=0; x < WIDTH; x++){
 #if 1
-			FLOAT fx = screen_convert(w, x);
+			FLOAT fx = screen_convert(WIDTH, x);
 			vec3 ray = eye_ray(fhat, rl, ul, fx, fy);
 			find_closest_hitpoint(eye, ray, x, y, surface);
 #else
