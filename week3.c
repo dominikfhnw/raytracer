@@ -323,7 +323,9 @@ static void render(void* surface)
 			#else
 			vec3 ray = norm(eye2(corner, dx, dy, x, y));
 			#endif
+			#if MOOLTI
 			vec3 ray0 = eye2(corner, dx, dy, x, y);
+			#endif
 
 			tprintf("%d/%d %f %f\n",x,y,fx,fy);
 			tvec(ray);
