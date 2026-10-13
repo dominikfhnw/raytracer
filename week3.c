@@ -205,8 +205,6 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 		}
 	}
 
-	//const vec3 e = scene[num].emission;
-	//const FLOAT refl = e.x>e.y && e.x>e.z ? e.x : e.y>e.z ? e.y : e.z;
 #if MINDEPTH > 0
 #  if FIXED
 	if ( num == 0 || depth>=MINDEPTH )
