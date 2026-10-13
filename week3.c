@@ -242,10 +242,12 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 		direction = -direction;
 	}
 	
-	#if 1 && COSWEIGHT
+	#if !FIXED
+	# if COSWEIGHT
 	CONSTV FLOAT pconst = (FLOAT)(1)/(FLOAT)(1-P);
-	#else
+	# else
 	CONSTV FLOAT pconst = (FLOAT)(2)/(FLOAT)(1-P);
+	# endif
 	#endif
 
 #if FIXED
