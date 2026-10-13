@@ -30,7 +30,7 @@ minifying todo:
 
 #define WIDTH		600	// image width
 #define HEIGHT		600	// image height
-#define GAMMA		2.0	// image gamme
+#define GAMMA		2.0	// image gamma
 
 #define FLOAT_EXCEPTION	0	// croak if something's wrong with a float
 #ifndef DEBUG
