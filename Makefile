@@ -4,7 +4,7 @@ ifneq ($(DIRTY),)
 COMMIT	:= $(COMMIT)+
 endif
 
-SMALL   := -no-pie -fno-pie -fno-plt -fwhole-program -fipa-pta -fomit-frame-pointer -fcf-protection=none -Wno-unknown-pragmas -falign-functions=1 -falign-jumps=1 -falign-labels=1 -falign-loops=1 -fno-prefetch-loop-arrays -fno-ipa-cp-clone
+SMALL   := -Wl,--build-id=none -no-pie -fno-pie -fno-plt -fwhole-program -fipa-pta -fomit-frame-pointer -fcf-protection=none -Wno-unknown-pragmas -falign-functions=1 -falign-jumps=1 -falign-labels=1 -falign-loops=1 -fno-prefetch-loop-arrays -fno-ipa-cp-clone
 #SMALL   := -no-pie -fno-pie -fno-plt -fwhole-program -fipa-pta -fomit-frame-pointer -fcf-protection=none -Wno-unknown-pragmas
 CFLAGS0 := -g -Wall -Wextra -Wpedantic -DCOMMIT=\"$(COMMIT)\"
 CFLAGS  := $(CFLAGS0) $(SMALL)
