@@ -11,28 +11,18 @@ typedef int_least16_t coord_t;
 
 CONSTEXPR __attribute__((always_inline)) color_t map_component(FLOAT c)
 {
-#if 1
 	if (c > 1)
 		c = 1;
-#endif
-#if 0
-	if (c < 0)
-		c = 0;
-#endif
-
-	#if YOLO				// assumes GAMMA == 2.0
-		return 255 * SQRT(c);		// 255 -> FLOAT CONST
-	#else
-		return 255 * POW(c, 1/GAMMA);
-	#endif
+	return 255 * c;		// 255 -> FLOAT CONST
 
 }
 
-CONSTEXPR uint32_t colormap(const vec3 color)
+CONST uint32_t colormap(const vec3 color)
 {
-	color_t r = map_component(color.x);
-	color_t g = map_component(color.y);
-	color_t b = map_component(color.z);
+	vec3 gamma = _mm_sqrt_ps(color);
+	color_t r = map_component(gamma[0]);
+	color_t g = map_component(gamma[1]);
+	color_t b = map_component(gamma[2]);
 
 	//dprintf("lin %u %u %u\n", r, g, b);
 	return (r << 16) + (g << 8) + (b << 0); // bgra32
@@ -43,9 +33,9 @@ CONSTEXPR uint32_t colormap(const vec3 color)
 CONSTEXPR vec3 reverse_color(const uint32_t color)
 {
 	vec3 result;
-	result.z = pow((FLOAT)(color & 0x00FF) / 255.0, GAMMA);
-	result.y = pow((FLOAT)( (color & 0xFF00)>>8 ) / 255.0, GAMMA);
-	result.x = pow((FLOAT)( (color & 0xFF0000)>>16 ) / 255.0, GAMMA);
+	result[2] = pow((FLOAT)(color & 0x00FF) / 255.0, GAMMA);
+	result[1] = pow((FLOAT)( (color & 0xFF00)>>8 ) / 255.0, GAMMA);
+	result[0] = pow((FLOAT)( (color & 0xFF0000)>>16 ) / 255.0, GAMMA);
 	return result;
 }
 #endif

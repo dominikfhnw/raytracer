@@ -14,18 +14,18 @@ minifying todo:
 */
 
 #define P		0.5	// probability to bounce once more
-#define SAMPLES		4096	// number of samples for each pixel
+#define SAMPLES		512	// number of samples for each pixel
 #define MINDEPTH	3	// minimum number of steps
 #define FIXED		1	// mindepth == maxdepth
-#define MOOLTI		1	// gaussian distributed multisampling
+#define MOOLTI		0	// gaussian distributed multisampling
 #define BLUR		1	// focus blur
-#define TEXTURE		1	// texture mapping
-#define SLOW		0	// ssssllloooowww but small
+#define TEXTURE		0	// texture mapping
+#define SLOW		1	// ssssllloooowww but small
 
 #define EXIT		0	// clean exit vs sticking around in an endless loop
 #define UPDATE		1	// update screen while calculation is running
 #define BLUR_VAL	0.23
-#define OLDEYE		0	// old eye ray calc. new one doesn't work with alt.persp.
+#define OLDEYE		1	// old eye ray calc. new one doesn't work with alt.persp.
 #define COSWEIGHT	1	// cosine-weighted distribution
 
 #define WIDTH		600	// image width
@@ -57,15 +57,15 @@ minifying todo:
 #include "sdl.h"
 #endif
 
-#include "scene3.h"
+#include "scene4.h"
 
 CONSTEXPR vec3 eye2(const vec3 f, const FLOAT dx, const FLOAT dy, const coord_t x, const coord_t y)
 {
 	vec3 ret;
 
 	ret = f;
-	ret.x = ret.x + x*dx;
-	ret.y = ret.y + y*dy;
+	ret[0] = ret[0] + x*dx;
+	ret[1] = ret[1] + y*dy;
 
 	return ret;
 }
@@ -113,8 +113,7 @@ CONSTEXPR FLOAT hitcheck(const sphere s, const vec3 E, const vec3 d)
 	vec3  CE = sub(E,C);
 	FLOAT a = 1;
 	FLOAT b = 2 * dotP(CE, d);
-	// TODO: r*r could be precomputed
-	FLOAT c = dotP(CE,CE) - (r * r);
+	FLOAT c = dotP(CE,CE) - r;
 
 	FLOAT root = b*b - 4*a*c;	// FLOAT CONST 4
 
@@ -159,8 +158,8 @@ CONSTEXPR vec3 BRDF(const color_t num, const vec3 in, const vec3 out, vec3 norma
 	vec3 result = scene[num].diffuse;
 #if TEXTURE
 	if ( scene[num].material == 3 ) {	// TEXTURED
-		FLOAT phi   = atan2f(normal.z, normal.x)+4.8;
-		FLOAT theta = acosf(normal.y);
+		FLOAT phi   = atan2f(normal[2], normal[0])+4.8;
+		FLOAT theta = acosf(normal[1]);
 		FLOAT u = phi / (2*PI);
 		FLOAT v = theta / PI;
 		uint32_t pu = (uint32_t)floorf(image->w * u);
@@ -310,8 +309,8 @@ static void render(void* surface)
 	CONSTV vec3 nextl = eye_ray(fhat, rl, ul, cornerx, nexty);
 	CONSTV vec3 diffl = sub(nextl, corner);
 	dvec(diffl);
-	CONSTV FLOAT dx = diff.x;
-	CONSTV FLOAT dy = diffl.y;
+	CONSTV FLOAT dx = diff[0];
+	CONSTV FLOAT dy = diffl[1];
 	dprintf("dfloats %f %f\n\n", dx, dy);
 	#endif
 
@@ -338,8 +337,8 @@ static void render(void* surface)
 				for(coord_t v=0;v < SAMPLES;v++){
 					#if MOOLTI
 					vec3 rray = ray0;
-					rray.x += frand()*frand()*dx;
-					rray.y += frand()*frand()*dy;
+					rray[0] += frand()*frand()*dx;
+					rray[1] += frand()*frand()*dy;
 					const vec3 nray = norm(rray);
 					#else
 					#define nray ray
@@ -349,8 +348,8 @@ static void render(void* surface)
 					const vec3 focal = add(local_eye, scalar_mult(nray, FOCAL_LENGTH));
 					#if BLUR
 					vec3 reye = local_eye;
-					reye.x += frand()*frand()*BLUR_VAL;
-					reye.y += frand()*frand()*BLUR_VAL;
+					reye[0] += frand()*frand()*BLUR_VAL;
+					reye[1] += frand()*frand()*BLUR_VAL;
 
 					//const vec3 blur_ray = scalar_mult(normV(reye, focal),1);
 					const vec3 blur_ray = normV(reye,focal);

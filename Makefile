@@ -7,10 +7,10 @@ endif
 SMALL   := -Wl,--build-id=none -no-pie -fno-pie -fno-plt -fwhole-program -fipa-pta -fomit-frame-pointer -fcf-protection=none -Wno-unknown-pragmas -falign-functions=1 -falign-jumps=1 -falign-labels=1 -falign-loops=1 -fno-prefetch-loop-arrays -fno-ipa-cp-clone
 #SMALL   := -no-pie -fno-pie -fno-plt -fwhole-program -fipa-pta -fomit-frame-pointer -fcf-protection=none -Wno-unknown-pragmas
 CFLAGS0 := -g -Wall -Wextra -Wpedantic -DCOMMIT=\"$(COMMIT)\"
-CFLAGS  := $(CFLAGS0) $(SMALL)
+CFLAGS  := $(CFLAGS0) $(SMALL) -msse4.1
 
 #FBDEV	:= -Ofast -ffast-math -march=x86-64-v2 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding -std=gnu99
-FBDEV	:= -Oz -ffast-math -march=pentium4 -mfpmath=387 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding
+FBDEV	:= -Oz -ffast-math -march=pentium4 -mno-avx -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding
 WEEK	:= week3.c
 ASM	=  -g0 -fverbose-asm -S -masm=intel -o- 2>/dev/null | grep -vF -e ".loc" -e "\#APP" -e "\#NO_APP" -e "\# 0 " > $@.s
 LIB	:= `sdl2-config --cflags --libs` -lm -lSDL2_image
