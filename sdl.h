@@ -6,6 +6,7 @@
 
 #include "common.h"
 
+#if TEXTURE
 #include <SDL_image.h>
 SDL_Surface* image;
 static uint32_t get_pixel(const SDL_Surface *surface, const coord_t x, const coord_t y)
@@ -13,6 +14,7 @@ static uint32_t get_pixel(const SDL_Surface *surface, const coord_t x, const coo
 	uint8_t *target_pixel = (uint8_t*)surface->pixels + (y * surface->pitch) + (x * surface->format->BytesPerPixel);
         return *(uint32_t*)target_pixel;
 }
+#endif
 
 static void set_pixel(const void *window, const coord_t x, const coord_t y, const uint32_t pixel)
 {
@@ -114,10 +116,12 @@ int main(void)
 	SDL_Surface* surface = SDL_GetWindowSurface(window);
 	check(surface, "getsurface failed");
 
+	#if TEXTURE
 	//image = SDL_ConvertSurface(IMG_Load("desire4.png"), surface->format, 0);
 	image = IMG_Load("desire4.png");
 	check(image, "loading img failed");
 	dprintf("Image %dx%d\n", image->w, image->h);
+	#endif
 
 	if (SDL_MUSTLOCK(surface) && !YOLO) {
 		SDL_LockSurface(surface);
