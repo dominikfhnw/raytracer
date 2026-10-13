@@ -1,5 +1,7 @@
 #if FLOAT_EXCEPTION
-#define _GNU_SOURCE
+# ifndef _GNU_SOURCE
+# define _GNU_SOURCE
+# endif
 #endif
 
 #ifndef YOLO
@@ -20,11 +22,19 @@
 #define CONSTEXPR	constexpr CONST
 #define CONSTV		constexpr
 #define PURE		constexpr PURE0
+#include <type_traits>
+#define IS_CONSTANT	std::is_constant_evaluated()
 #else
 #define CONSTEXPR	CONST
 #define CONSTV		const
 #define PURE		PURE0
+#define IS_CONSTANT	false
 #endif
+
+#ifndef NOSIMD
+#define NOSIMD 0
+#endif
+#define SISD (NOSIMD || IS_CONSTANT)
 
 #if __cplusplus
 #define NOMANGLE extern "C"
