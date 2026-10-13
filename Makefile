@@ -10,7 +10,7 @@ CFLAGS0 := -g -Wall -Wextra -Wpedantic -DCOMMIT=\"$(COMMIT)\"
 CFLAGS  := $(CFLAGS0) $(SMALL)
 
 #FBDEV	:= -Ofast -ffast-math -march=x86-64-v2 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding -std=gnu99
-FBDEV	:= -Oz -ffast-math -march=pentium4 -mfpmath=387 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding -std=gnu99
+FBDEV	:= -Oz -ffast-math -march=pentium4 -mfpmath=387 -T fbdev/ldscript -m32 -DFBDEV -nostdlib -ffreestanding
 WEEK	:= week3.c
 ASM	=  -g0 -fverbose-asm -S -masm=intel -o- 2>/dev/null | grep -vF -e ".loc" -e "\#APP" -e "\#NO_APP" -e "\# 0 " > $@.s
 LIB	:= `sdl2-config --cflags --libs` -lm -lSDL2_image
@@ -33,8 +33,8 @@ small:
 	@./fbdev/pack.sh $@
 
 fb:
-	$(CC)   $(CFLAGS) $(FBDEV) $(WEEK) -o $@
-	@$(CC)  $(CFLAGS) $(FBDEV) $(WEEK) $(ASM)
+	$(CC)   $(CFLAGS) $(FBDEV) $(WEEK) -std=gnu99 -o $@
+	@$(CC)  $(CFLAGS) $(FBDEV) $(WEEK) -std=gnu99 $(ASM)
 	@nm -C -S -t d --size-sort $@
 	@RELEASE=0 ./fbdev/pack.sh $@
 
