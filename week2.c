@@ -40,7 +40,7 @@ Color ComputeColor(Scene s, Vec3 o, Vec3 d) { … }
 #include "sdl.h"
 #endif
 
-#include "scene2.h"
+#include "scene.h"
 
 vec3 eye_ray(vec3 f, vec3 rl, vec3 ul, float x, float y)
 {
