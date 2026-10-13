@@ -297,6 +297,7 @@ static void render(void* surface)
 	dvec(fhat);
 	dprintf("sizeof sphere %ld, sizeof scene %ld, num spheres %ld\n", sizeof(sphere), sizeof(scene), NUM_SPHERES);
 
+	#if !OLDEYE
 	CONSTV FLOAT cornery = screen_convert(HEIGHT, 0);
 	CONSTV FLOAT cornerx = screen_convert(WIDTH,  0);
 	CONSTV FLOAT nexty   = screen_convert(HEIGHT, 1);
@@ -312,6 +313,7 @@ static void render(void* surface)
 	CONSTV FLOAT dx = diff.x;
 	CONSTV FLOAT dy = diffl.y;
 	dprintf("dfloats %f %f\n\n", dx, dy);
+	#endif
 
 #pragma omp parallel for schedule(static)
 	for(int y=0; y < HEIGHT; y++){
