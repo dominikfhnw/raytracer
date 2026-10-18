@@ -51,7 +51,7 @@ fi
 
 if [ -n "${BYTESHAVE-}" ]; then
 	if :; then
-		byteshaver "$OUT" >/dev/null 2>&1
+		fbdev/byteshaver "$OUT" >/dev/null 2>&1
 	else
 		cp "$OUT" "${OUT}2"
 		truncate -s -1 "${OUT}2"
@@ -63,6 +63,5 @@ if [ -n "${BYTESHAVE-}" ]; then
 	fi
 fi
 
-mv "$OUT.shaved" "$OUT"
 chmod +x "$OUT"
 ls -l "$OUT"

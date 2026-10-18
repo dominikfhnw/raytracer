@@ -1,13 +1,19 @@
 typedef struct sphere {
 	vec3	center;
-	FLOAT	radius;
 	vec3	diffuse;
 	vec3	emission;
+	FLOAT	radius;
 	uint8_t	material;
 } sphere;
 
+#if 0
+// generates bigger code
 typedef uint_least8_t color_t;
 typedef int_least16_t coord_t;
+#else
+typedef uint32_t color_t;
+typedef int32_t coord_t;
+#endif
 
 CONSTEXPR __attribute__((always_inline)) color_t map_component(FLOAT c)
 {
@@ -19,7 +25,7 @@ CONSTEXPR __attribute__((always_inline)) color_t map_component(FLOAT c)
 
 CONST uint32_t colormap(const vec3 color)
 {
-	vec3 gamma = _mm_sqrt_ps(color);
+	vec3 gamma = vsqrt(color);
 	color_t r = map_component(gamma[0]);
 	color_t g = map_component(gamma[1]);
 	color_t b = map_component(gamma[2]);
@@ -42,7 +48,11 @@ CONSTEXPR vec3 reverse_color(const uint32_t color)
 
 vec3 randvec(void)
 {
+#if VRAND
+	vec3 rand = vfrand(); // randvec
+#else
 	vec3 rand = { frand(), frand(), frand() };
+#endif
 	rand = norm(rand);
 	return rand;
 }

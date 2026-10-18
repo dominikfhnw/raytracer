@@ -2,22 +2,39 @@ typedef __m128 vec3;
 
 CONSTEXPR vec3 add(const vec3 a, const vec3 b)
 {
-	return a+b;
+	return a+b; // vec3 add
 }
 
 CONSTEXPR vec3 sub(const vec3 a, const vec3 b)
 {
-	return a-b;
+	return a-b; // vec3 sub
 }
 
 CONST vec3 hadamard(const vec3 a, const vec3 b)
 {
-	return a*b;
+	return a*b; // vec3 hadamard
 }
 
 CONST vec3 changesign(const vec3 a)
 {
 	return a*-1;
+}
+
+CONST vec3 vsqrt(const vec3 a)
+{
+	if (SISD) {
+		FLOAT x = SQRT(a[0]);
+		FLOAT y = SQRT(a[1]);
+		FLOAT z = SQRT(a[2]);
+		vec3 result = { x, y, z, 0 };
+		return result;
+	}
+	return _mm_sqrt_ps(a);
+}
+
+CONST vec3 dotP3(const vec3 a, const vec3 b)
+{
+	return _mm_dp_ps(a, b, 0b01110111);
 }
 
 CONSTEXPR FLOAT dotP(const vec3 a, const vec3 b)
@@ -38,9 +55,12 @@ CONSTEXPR vec3 norm(const vec3 a)
 		vec3 result = { x, y, z, 0 };
 		return result;
 	}
-	const vec3 dot = _mm_dp_ps(a, a, 0b01110111);
-	const vec3 rsqrt = _mm_sqrt_ps(dot);
-	return a/rsqrt;
+	// explicit else so that g++ can tell this function really works as constexpr
+	else {
+		const vec3 dot = dotP3(a,a);
+		const vec3 rsqrt = _mm_sqrt_ps(dot);
+		return a/rsqrt; // norm
+	}
 }
 
 CONSTEXPR vec3 normV(const vec3 a, const vec3 b)
@@ -67,5 +87,5 @@ CONSTEXPR vec3 crossP(const vec3 a, const vec3 b)
 
 CONSTEXPR vec3 scalar_mult(const vec3 a, const FLOAT amount)
 {
-	return a*amount;
+	return a*amount; // vec3 scalar_mult
 }

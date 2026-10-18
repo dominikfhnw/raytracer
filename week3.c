@@ -2,16 +2,14 @@
 raytracer by dominikr
 
 minifying todo:
-* storing upper left corner of image plane instead of middle
-  would prob save a bit
-* storing radius^2 instead of radius could save a bit
 * using smaller data format for the scene *could* save some space,
   but deflate is quite good at compacting it already
-* if SAMPLES is 256: directly convert into 8bit by converting fp to char?
 * simplify more stuff, rewrite stuff in assembler
 
 
 */
+
+#define VRAND 1
 
 #define P		0.5	// probability to bounce once more
 #define SAMPLES		512	// number of samples for each pixel
@@ -20,11 +18,11 @@ minifying todo:
 #define MOOLTI		0	// gaussian distributed multisampling
 #define BLUR		1	// focus blur
 #define TEXTURE		0	// texture mapping
-#define SLOW		1	// ssssllloooowww but small
+#define SLOW		1	// smaller, but potentially slower (not in SSE apparently)
 
 #define EXIT		0	// clean exit vs sticking around in an endless loop
 #define UPDATE		1	// update screen while calculation is running
-#define BLUR_VAL	0.23
+#define BLUR_VAL	0.23f
 #define OLDEYE		1	// old eye ray calc. new one doesn't work with alt.persp.
 #define COSWEIGHT	1	// cosine-weighted distribution
 
@@ -93,9 +91,9 @@ CONSTEXPR FLOAT screen_convert(const coord_t width, const coord_t x)
 	assert(x < width);
 
 	int half = width / 2;	// FLOATING CONST ???
-	int m = x - half;
+	int m = x - half; // screen_convert
 
-	FLOAT result = (FLOAT)m / (FLOAT)half;
+	FLOAT result = (FLOAT)m / (FLOAT)half; // screen_convert
 	if (result > 1 || result < -1) {
 		dprintf("h %d m %d\n", half, m);
 		dprintf("in %d,%d o %f\n", width, x, result);
@@ -111,18 +109,17 @@ CONSTEXPR FLOAT hitcheck(const sphere s, const vec3 E, const vec3 d)
 	vec3  C = s.center;
 
 	vec3  CE = sub(E,C);
-	FLOAT a = 1;
-	FLOAT b = 2 * dotP(CE, d);
+	FLOAT b = -2 * dotP(CE, d); // hitcheck
 	FLOAT c = dotP(CE,CE) - r;
 
-	FLOAT root = b*b - 4*a*c;	// FLOAT CONST 4
+	FLOAT root = b*b - 4*c;	// FLOAT CONST 4
 
 #if !SLOW
 	if (root < 0)
 		return 0;
 #endif
 
-	FLOAT l2 = (-b - SQRT(root)) / (2*a);	// FLOAT CONST 2
+	FLOAT l2 = (b - SQRT(root)) / 2;	// FLOAT CONST 2
 #if WEIRD
 	if (l2 > 0)
 		return l2;
@@ -146,9 +143,9 @@ CONSTEXPR FLOAT getlambda(void)
 	return TAN(fov_rad/2);
 }
 
-CONSTEXPR vec3 reflect(const vec3 in, const vec3 normal)
+CONST vec3 reflect(const vec3 in, const vec3 normal)
 {
-	const vec3 m = scalar_mult(normal, dotP(in, normal));
+	const vec3 m = hadamard(normal, dotP3(in, normal));
 	const vec3 p = sub(m, in);
 	return add(scalar_mult(p,2), in);
 }
@@ -172,13 +169,13 @@ CONSTEXPR vec3 BRDF(const color_t num, const vec3 in, const vec3 out, vec3 norma
 		//return reverse_color(pixel);
 		result = reverse_color(pixel);
 	}
-	if ( scene[num].material == 1 || scene[num].material == 3 ) {	// REFLECTIVE
+	if ( scene[num].material == 1 || scene[num].material == 3 ) {	// brdf REFLECTIVE
 #else
-	if ( scene[num].material == 1 ) {	// REFLECTIVE
+	if ( scene[num].material == 1 ) {	// brdf REFLECTIVE
 #endif
 		// Compute reflection of `in` on `normal`
 		const vec3 dr = reflect(in, normal);
-		if (dotP(dr,out) > 1 - 0.01) {
+		if (dotP(dr,out) > 1.0f - 0.01f) { // brdf reflective
 			//putc(39,stderr);
 			#define DI 4*PI
 			vec3 dielec = {DI,DI,DI};
@@ -189,31 +186,31 @@ CONSTEXPR vec3 BRDF(const color_t num, const vec3 in, const vec3 out, vec3 norma
 	return result;
 }
 
-CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec3 ray, const color_t depth)
+CONSTEXPR vec3 compute_color(const vec3 eye, const vec3 ray, const color_t depth)
 {
 	FLOAT min = FLOAT_MAX;	// FLOAT CONST
-	color_t num = 0;
+	color_t num = 0; // compute_color hitcheck
 	for(color_t v=1; v<NUM_SPHERES; v++){
 		FLOAT hit = hitcheck(scene[v], eye, ray);
-		if (hit != 0 && hit < min) {
+		if (hit != 0 && hit < min) {  // compute_color hitcheck
 		// raytracing in one weekend, get rid of shadow acne
 		// same as nudging?? but cheaper in codesize
 		//if (hit > NUDGE && hit < min) {
-			min = hit;
+			min = hit; // compute_color hitcheck
 			num = v;
 		}
 	}
 
 #if MINDEPTH > 0
 #  if FIXED
-	if ( num == 0 || depth>=MINDEPTH )
+	if ( num == 0 || depth>=MINDEPTH ) // compute_color early return
 #  else
 	if ( num == 0 || (depth>=MINDEPTH && RAND() < P*RMAX) )
 #  endif
 #else
 	if ( num == 0 || RAND() < P*RMAX )
 #endif
-		return scene[num].emission;
+		return scene[num].emission; // compute_color early return
 
 	const vec3 hitpoint	= add(eye, scalar_mult(ray, min));
 	#if NUDGE_EN
@@ -221,10 +218,10 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 	#else
 	# define hp_nudge hitpoint
 	#endif
-	const vec3 normal	= normV(scene[num].center, hitpoint);
+	const vec3 normal	= normV(scene[num].center, hitpoint); // compute_color normal
 	vec3 nextdir;
 
-	if (scene[num].material == 2) {				// MIRROR
+	if (scene[num].material == 2) {				// compute_color MIRROR
 		nextdir		= reflect(ray, normal);
 	}
 	else {
@@ -236,7 +233,7 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 	}
 	const vec3 brdf		= BRDF(num, ray, nextdir, normal);
 	FLOAT direction		= dotP(nextdir, normal);
-	if (direction < 0) {
+	if (direction < 0) { // compute_color direction check
 		nextdir = changesign(nextdir);
 		direction = -direction;
 	}
@@ -270,11 +267,29 @@ CONSTEXPR __attribute__((noinline)) vec3 compute_color(const vec3 eye, const vec
 #  endif
 #endif
 
-	const vec3 moo = hadamard(foo, compute_color(hp_nudge, nextdir, depth+1));
+	const vec3 moo = hadamard(foo, compute_color(hp_nudge, nextdir, depth+1)); // compute_color recurse
 	return add(scene[num].emission,moo);
+} // compute_color end
+
+
+static void output(const void* surface,const coord_t x, const coord_t y, const vec3 sample)
+{
+#if 0
+	vec3 out;
+	out = scalar_mult(sample, 1/(FLOAT)SAMPLES);
+	uint32_t pixel = colormap(out);
+	set_pixel(surface, x, y, pixel);
+#else
+	#define RGB_CORR (65535/SAMPLES)
+	vec3 gamma = vsqrt(sample*RGB_CORR);
+	__m128i p = _mm_cvtps_epi32(gamma);
+	__m128i p16 = _mm_packus_epi32(p, p);
+	__m128i p8 = _mm_packus_epi16(p16, p16);
+	set_pixel128(surface, x, y, p8);
+#endif
 }
 
-static void render(void* surface)
+static void render(const void* surface)
 {
 	CONSTV vec3 eye		= EYE;
 	CONSTV vec3 look	= LOOK;
@@ -315,9 +330,9 @@ static void render(void* surface)
 	#endif
 
 #pragma omp parallel for schedule(static)
-	for(int y=0; y < HEIGHT; y++){
+	for(int y=0; y < HEIGHT; y++){ // render y
 		FLOAT fy = screen_convert(HEIGHT, y);
-		for(int x=0; x < WIDTH; x++){
+		for(int x=0; x < WIDTH; x++){ // render x
 			FLOAT fx = screen_convert(WIDTH, x);
 			#if OLDEYE
 			vec3 ray = norm(eye_ray(fhat, rl, ul, fx, fy));
@@ -330,11 +345,10 @@ static void render(void* surface)
 
 			tprintf("%d/%d %f %f\n",x,y,fx,fy);
 			tvec(ray);
-			tvec(xray);
-			vec3 sample = {0, 0, 0};
+			vec3 sample = {0, 0, 0}; // render init sample
 			CONSTV vec3 local_eye = EYE;
 			#if MOOLTI || BLUR
-				for(coord_t v=0;v < SAMPLES;v++){
+				for(coord_t v=0;v < SAMPLES;v++){ // render collect samples
 					#if MOOLTI
 					vec3 rray = ray0;
 					rray[0] += frand()*frand()*dx;
@@ -348,15 +362,20 @@ static void render(void* surface)
 					const vec3 focal = add(local_eye, scalar_mult(nray, FOCAL_LENGTH));
 					#if BLUR
 					vec3 reye = local_eye;
+					#if VRAND
+					vec3 gauss = vgauss();
+					reye += gauss * BLUR_VAL; // render defocus blur
+					#else
 					reye[0] += frand()*frand()*BLUR_VAL;
 					reye[1] += frand()*frand()*BLUR_VAL;
+					#endif
 
 					//const vec3 blur_ray = scalar_mult(normV(reye, focal),1);
 					const vec3 blur_ray = normV(reye,focal);
 
 					//vec3 single = compute_color(reye, norm(rray), 0);
 					//vec3 single = compute_color(local_eye, blur_ray, 0);
-					vec3 single = compute_color(reye, blur_ray, 0);
+					vec3 single = compute_color(reye, blur_ray, 0); // render call cmpute_color
 					#else
 					vec3 single = compute_color(local_eye, nray, 0);
 					#endif
@@ -368,10 +387,7 @@ static void render(void* surface)
 					sample = add(sample,single);
 				}
 			#endif
-			sample = scalar_mult(sample, 1/(FLOAT)SAMPLES);
-			uint32_t pixel = colormap(sample);
-			set_pixel(surface, x, y, pixel);
-
+			output(surface, x, y, sample);
 		}
 		#if UPDATE
 			#if DEBUG

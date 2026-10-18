@@ -4,14 +4,8 @@
 # endif
 #endif
 
-#ifndef NOSIMD
-# define _MM_MALLOC_H_INCLUDED
-# if __FMA__
-#  include <immintrin.h>
-# else
-#  include <smmintrin.h>
-# endif
-#endif
+#define _MM_MALLOC_H_INCLUDED
+#include <smmintrin.h>
 
 #ifndef YOLO
 #define YOLO 0
@@ -20,17 +14,18 @@
 #define CALL regparm(3)
 #define STATIC 1
 #if STATIC
-#define FUNC __attribute__((CALL)) static
+#define FUNC static
 #else
 #define FUNC
 #endif
 
-#define CONST		__attribute__((const,nothrow,CALL)) static
-#define PURE0		__attribute__((pure,nothrow,CALL)) static
+#define CONST		__attribute__((const,nothrow)) static
+#define PURE0		__attribute__((pure,nothrow)) static
 #if __cplusplus >= 202002L
 #define CONSTEXPR	constexpr CONST
 #define CONSTV		constexpr
 #define PURE		constexpr PURE0
+#define _GLIBCXX_OS_DEFINES 1
 #include <type_traits>
 #define IS_CONSTANT	std::is_constant_evaluated()
 #else
@@ -44,6 +39,11 @@
 #define NOSIMD 0
 #endif
 #define SISD (NOSIMD || IS_CONSTANT)
+
+#ifndef __SSE__
+#undef  NOSIMD
+#define NOSIMD 1
+#endif
 
 #if __cplusplus
 #define NOMANGLE extern "C"

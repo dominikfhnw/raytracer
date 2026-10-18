@@ -1,61 +1,86 @@
-#if XORSHIFT
-// G. Marsaglia, ‘Xorshift RNGs’, Journal of Statistical Software, vol. 8, pp. 1–6, Jul. 2003, doi: 10.18637/jss.v008.i14.
+#define PUSH(x) "push	%k[" #x "]\n\t"
+#define POP(x)  "pop	%k[" #x "]\n\t"
 
-//__THREAD uint32_t rand_state = 2463534242;
+// LCG from Turbo Pascal 4.0+
+#define RAND_MUL 134775813
+
 __THREAD uint32_t rand_state = 0;
 
-static uint32_t my_rand(void)
+static inline uint32_t my_rand(void)
 {
-	//uint32_t x = rand_state;
-#if 0
-	x ^= x << 13;
-	x ^= x >> 17;
-	x ^= x << 5;
-#else
-	rand_state *= 134775813;
+	rand_state *= RAND_MUL;
 	rand_state++;
-#endif
-	//rand_state = x;
 	return rand_state;
 }
+
 #define RAND(x)	my_rand(x)
 #define RMAX	UINT32_MAX
 
-#else
-
-#include <stdlib.h>
-#define RAND(x)	rand(x)
-#define RMAX	RAND_MAX
-
-#endif
-
-
-#if XORSHIFT && FLOAT == float
-// inspired by https://blog.bithole.dev/blogposts/random-float/
-// returns a floating point number between -1 and +1
-static float frand(void)
-{
-	int total_bits		=  32;
-	int fraction_bits	=  23;
-	int exp_offset		= 127;
-	uint32_t mask;
-	uint32_t exp;
-	float off;
-
-	off = 3; // FLOAT CONST
-	exp = 1;
-
-	mask = (exp+exp_offset) << fraction_bits;
-	union { uint32_t u32; float f; } u = { .u32 = my_rand() >> (total_bits-fraction_bits) | mask };
-
-	return u.f - off;
-}
-
-#else
-// the same, but worse
 static FLOAT frand(void)
 {
 	return (FLOAT) ( ((FLOAT)RAND() - ((FLOAT)RMAX/2.0) ) / (FLOAT)RMAX);
 }
-#endif
+
+static __m128i sserand(void)
+{
+	__m128i result;
+	uint32_t mul = RAND_MUL;
+	uint32_t rand;
+
+	__asm__ volatile ( // sserand
+		"mov	%[rmem], %[rand]\n\t"
+		"imul	%[mul], %[rand], %[rand]\n\t"
+		"inc	%[rand]\n\t"
+		PUSH(rand)
+
+		"imul	%[mul], %[rand], %[rand]\n\t"
+		"inc	%[rand]\n\t"
+		PUSH(rand)
+
+		"imul	%[mul], %[rand], %[rand]\n\t"
+		"inc	%[rand]\n\t"
+		PUSH(rand)
+
+		"imul	%[mul], %[rand], %[rand]\n\t"
+		"inc	%[rand]\n\t"
+		PUSH(rand)
+
+		"movdqu (%%esp), %[sse]\n\t"
+		"mov	%[rand], %[rmem]\n\t"
+
+		POP(rand)
+		POP(rand)
+		POP(rand)
+		POP(rand)
+
+		:
+		[rand] "=r" (rand),
+		[sse] "=x" (result)
+		:
+		[rmem] "m" (rand_state),
+		[mul] "i" (mul)
+		: "memory"
+	);
+	return result;
+}
+
+static __attribute__((noinline)) vec3 vfrand(void)
+{
+	__m128i rand;
+	const FLOAT mul = 1/ (FLOAT)INT32_MAX;
+	rand = sserand();
+	vec3 randf = _mm_cvtepi32_ps(rand);
+	return randf * mul; // vfrand
+} // end vfrand
+
+// TODO: this does not create a gaussian distribution in any way or form
+static vec3 vgauss(void)
+{
+	vec3 rand = vfrand(); // vgauss
+	vec3 low = _mm_setzero_ps();
+	low = _mm_movehl_ps(low, rand);
+	vec3 result = rand*low;
+	return result;
+}
+
 

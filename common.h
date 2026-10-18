@@ -20,11 +20,14 @@
 #define dprintf(...)
 #define NDEBUG 1
 #endif
-#define dvec(a) dprintf("vec %-8s%f %f %f\n", #a, a[0], a[1], a[2])
+#define dvec(a)  dprintf("vec %-12s %f %f %f\n",    #a, a[0], a[1], a[2])
+#define dvec4(a) dprintf("vec %-12s 0 %f  1 %f  2 %f  3 %f\n", #a, a[0], a[1], a[2], a[3])
+#define dv4si(a) dprintf("v4i %-12s 0 %d  1 %d  2 %d  3 %d\n", #a, ((__v4si)a)[0], ((__v4si)a)[1], ((__v4si)a)[2], ((__v4si)a)[3])
+
 
 #if TRACE
 #define tprintf(...) dprintf(__VA_ARGS__)
-#define tvec(a) dprintf("vec %-8s%f %f %f\n", #a, a[0], a[1], a[2])
+#define tvec(a) dprintf("vec %-12s%f %f %f\n", #a, a[0], a[1], a[2])
 #else
 #define tprintf(...)
 #define tvec(a)
@@ -45,4 +48,4 @@
 #include "vec3.h"
 #include "rand.h"
 #include "ray.h"
-static void render(void*);
+static void render(const void*);
