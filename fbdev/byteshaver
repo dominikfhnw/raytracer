@@ -1,0 +1,49 @@
+#!/bin/bash
+set -ue
+case $# in 0)echo "$0 <FILE>";exit 2;esac
+
+cleanup(){
+	#echo "cleanup ${1-}"
+	#[ -n "$TMP" ] && echo "rm $TMP"
+	[ -n "$TMP" ] && rm -r "$TMP"
+	#exit
+}
+
+IN=$1
+TMP=$(mktemp -d)
+trap "cleanup exit" EXIT
+
+FORMAT=$(file -b "$IN")
+case $FORMAT in
+XZ*) CAT="xzcat";;
+gzip*) CAT="zcat";;
+Zstandard*) CAT="zstdcat";;
+LZ4*) CAT="lz4cat";;
+*) CAT="xzcat";; # LZMA1 seems to be more or less headerless
+#*)
+#	echo "unknown file format: $FORMAT"
+#	exit 1;;
+esac
+
+"$CAT" "$IN" > "$TMP"/orig ||:
+
+cp "$IN" "$TMP/n"
+declare -i saved=0
+while :; do
+	cp "$TMP/n" "$TMP/before"
+	truncate -s -1 "$TMP/n"
+	set +e
+	"$CAT" "$TMP/n" > "$TMP/extract" 2>/dev/null
+	#"$CAT" "$TMP/n" > "$TMP/extract"
+	set -e
+	if ! cmp -s "$TMP/orig" "$TMP/extract"; then
+		break
+	fi
+	(( ++saved ))
+done
+
+echo "$saved bytes saved"
+cp "$TMP/before" "${IN}"
+#ls -l "$IN" "${IN}-shaved"
+
+exit
