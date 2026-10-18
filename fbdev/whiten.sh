@@ -14,18 +14,20 @@ FILE=$1
 OUT=${2-${FILE}-white}
 cp "$FILE" "$OUT"
 
+w 4 3 # elf0
+w 20 1 # version
 w 40 2 # header1
 w 46 2 # header2
 
 w 64 4 # paddr
-#w2 68 4 # filesz
-#w2 72 4 # memsz
+w2 68 4 # filesz
+w2 72 4 # memsz
 w 80 4 # align
 
-w  $((64+32*0)) 4 # paddr
+#w  $((64+32*0)) 4 # paddr
 #w2 $((68+32*0)) 4 # filesz
 #w2 $((72+32*0)) 4 # memsz
-w  $((80+32*0)) 4 # align
+#w  $((80+32*0)) 4 # align
 
 #w  $((64+32*1)) 4 # paddr2
 #w2 $((68+32*1)) 4 # filesz2

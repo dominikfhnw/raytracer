@@ -26,19 +26,15 @@
 
 #if 1
 CONSTV __attribute__((aligned(1))) sphere scene[] = {
-	{ {    0,     0,    0},    0, BLACK,  BLACK,   0 },	// null object - color used when no ray hits
-	{ {-1001,     0,    0}, 1000, RED,    BLACK,   0 },	// a 0
-	{ { 1001,     0,    0}, 1000, BLUE,   BLACK,   0 },	// b 1
-	{ {    0,     0, 1001}, 1000, GRAY,   BLACK,   0 },	// c 2
-	{ {    0, -1001,    0}, 1000, GRAY,   BLACK,   0 },	// d 3
-#if 0
-	{ {    0,  1001,    0}, 1000, BLACK,  WHITE2,   0 },	// e 4
-#else
-	{ {    0,  1001,    0}, 1000, BLACK,  BLACK,   0 },	// e 4
-	{ {    0,  4.95,    0},    4, BLACK,  WHITE10, 0 },	// e 4
-#endif
-	{ { -0.6,  -0.7, -0.6},  0.3, YELLOW, BLACK,   2 },	// f 5
-	{ {  0.3,  -0.4,  0.3},  0.6, CYAN,   BLACK,   1 },	// g 6
+	{ {    0,     0,    0}, BLACK,  BLACK,           0, 0 },	// null object - color used when no ray hits
+	{ {-1001,     0,    0}, RED,    BLACK,   1000*1000, 0 },	// a 0
+	{ { 1001,     0,    0}, BLUE,   BLACK,   1000*1000, 0 },	// b 1
+	{ {    0,     0, 1001}, GRAY,   BLACK,   1000*1000, 0 },	// c 2
+	{ {    0, -1001,    0}, GRAY,   BLACK,   1000*1000, 0 },	// d 3
+	{ {    0,  1001,    0}, BLACK,  BLACK,   1000*1000, 0 },	// e 4
+	{ {    0,  4.95,    0}, BLACK,  WHITE10,       4*4, 0 },	// e 4
+	{ { -0.6,  -0.7, -0.6}, YELLOW, BLACK,     0.3*0.3, 2 },	// f 5
+	{ {  0.3,  -0.4,  0.3}, CYAN,   BLACK,     0.6*0.6, 1 },	// g 6
 };
 
 #else

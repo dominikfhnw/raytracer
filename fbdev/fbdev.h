@@ -25,11 +25,16 @@ FUNC void clear(uint32_t* fb)
 
 #define update(x)
 
-FUNC void set_pixel(void *surface, int x, int y, uint32_t pixel)
+FUNC void set_pixel(const void *surface, const int x, const int y, const uint32_t pixel)
 {
-	// XXX constant "4"
 	uint32_t* target_pixel = (uint32_t*)surface + (y * STRIDE) + x;
         *target_pixel = pixel;
+}
+
+FUNC void set_pixel128(const void *surface, const int x, const int y, const __m128i pixel)
+{
+	float* target_pixel = (float*)surface + (y * STRIDE) + x;
+	_mm_storeu_ps(target_pixel, (__m128)pixel);
 }
 
 #pragma GCC diagnostic pop
