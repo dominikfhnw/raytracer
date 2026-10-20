@@ -22,6 +22,72 @@ extern _start
 %assign HEIGHT	600
 %assign SAMPLES	512
 
+%assign FOO 0
+
+%macro token_info 1+.nolist
+        %define %%id ""
+        %if 1
+                %ifnum %1
+                        %strcat %%id %%id, "N"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+
+                %ifstr %1
+                        %strcat %%id %%id, "S"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+
+                %iftoken %1
+                        %strcat %%id %%id, "T"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+
+                %ifid %1
+                        %strcat %%id %%id, "I"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+
+                %ifempty %1
+                        %strcat %%id %%id, "E"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+                %ifnidn %1,%1
+                        %strcat %%id %%id, "D"
+                %else
+                        %strcat %%id %%id, "."
+                %endif
+        %endif
+
+        ; num str token id empty
+        ; 1   2   3     4  5
+
+        %defstr %%n %1
+        %ifnum %1
+                %warning %?: %%n %eval(%1) is number %%id
+        %elifstr %1
+                %warning %?: %%n %eval(%1) is str/true %%id
+        %elifempty %1
+                %warning %?: %%n is empty %%id
+        %eliftoken %1
+                %ifid %1
+                        %warning %?: %%n is token %%id
+                %else
+                        %warning %?: %%n is token/notid %%id
+                %endif
+        %elifid %1
+                %warning %?: %%n is id %%id
+        %else
+                %warning %?: %%n is UNKNOWN %%id
+        %endif
+
+
+%endmacro
+
 
 
 %macro zero4 1
@@ -65,6 +131,8 @@ extern _start
 		[section .rodata align=4]
 		%%str:	dd %3
 		__?SECT?__
+		;movss	%1, [%%str]
+		;set1	%2, %3
 		%1      %2, [%%str]
 	%endif
 %endmacro
@@ -94,6 +162,9 @@ extern _start
 
 %macro dotP3 2
 	dpps	%1, %2, 119
+%endmacro
+
+%macro norm 2
 %endmacro
 
 %if 0
@@ -169,46 +240,39 @@ extern _start
 ; grep -vF -e .cfi ray.asm | tr '#' ';' | sed -E 's/\.(size|type)/\;&/' | sed 's/PTR //g'  > ray2.asm
 ; perl -pE 'if(/^\s*dd\s+(-?\d+)/){$f=sprintf("%.7g",unpack("f", pack("l",$1)));s/$1/$f/}'
 
-_ZL6vfrandv:
-; fbdev/../rand.h:30: 	__asm__ volatile ( // sserand
-; 30 "fbdev/../rand.h" 1
-	mov	eax, [rand_state]	; rand_state, rand
-	imul	eax, eax, 134775813	;, rand
-	inc	eax	; rand
-	push	eax	; rand
-	imul	eax, eax, 134775813	;, rand
-	inc	eax	; rand
-	push	eax	; rand
-	imul	eax, eax, 134775813	;, rand
-	inc	eax	; rand
-	push	eax	; rand
-	imul	eax, eax, 134775813	;, rand
-	inc	eax	; rand
-	push	eax	; rand
+vfrand:
+	mov	eax, [rand_state]
+	imul	eax, eax, 134775813
+	inc	eax
+	push	eax
+	imul	eax, eax, 134775813
+	inc	eax
+	push	eax
+	imul	eax, eax, 134775813
+	inc	eax
+	push	eax
+	imul	eax, eax, 134775813
+	inc	eax
+	push	eax
 	movdqu	xmm0, [esp]
-	mov	[rand_state], eax	; rand, rand_state
-	pop	eax	; rand
-	pop	eax	; rand
-	pop	eax	; rand
-	pop	eax	; rand
+	mov	[rand_state], eax
+	pop	eax
+	pop	eax
+	pop	eax
+	pop	eax
 	
-	cvtdq2ps	xmm0, xmm0	; tmp105, result
-; fbdev/../rand.h:73: 	return randf * mul; // vfrand
-	;load4	xmm1, [INV_INT_MAX]
+	cvtdq2ps	xmm0, xmm0
+	; 1/INT_MAX
 	set4	xmm1, 4.6566128730773925781e-10
-
-	mulps	xmm0, xmm1	; _5, tmp108
-; fbdev/../rand.h:74: } // end vfrand
+	mulps	xmm0, xmm1
 	ret	
-;LFE656:
-	;.size	"_ZL6vfrandv", .-"_ZL6vfrandv"
-	;.type	"_ZL13compute_colorDv4_fS_j", @function
-_ZL13compute_colorDv4_fS_j:
+
+compute_color:
 ;LFB673:
 	push	ebx	;
 	sub	esp, 24	;,
 	movaps	xmm3, xmm0	; eye, eye
-	mov	ecx, _ZL5scene	; ivtmp.64,
+	mov	ecx, scene	; ivtmp.64,
 ; week3.c:193: 	for(color_t v=1; v<NUM_SPHERES; v++){
 	push	1	;
 	pop	edx	; v
@@ -274,7 +338,7 @@ maxdepth:
 L17:
 ; week3.c:213: 		return scene[num].emission; // compute_color early return
 	sal	ebx, 6	; tmp190,
-	movaps	xmm0, [ebx+32+_ZL5scene]	; <retval>, scene[num_15].emission
+	movaps	xmm0, [ebx+32+scene]	; <retval>, scene[num_15].emission
 	jmp	compute_color_end
 
 nextray:
@@ -291,7 +355,7 @@ nextray:
 	sal	eax, 6	; tmp196,
 ; fbdev/../vec3.h:10: 	return a-b; // vec3 sub
 	movaps	xmm2, xmm4	; _33, _37
-	subps	xmm2, [eax+_ZL5scene]	; _33, scene[num_15].center
+	subps	xmm2, [eax+scene]	; _33, scene[num_15].center
 
 ; NORM
 	movaps	xmm0, xmm2	; tmp198, _33
@@ -300,11 +364,11 @@ nextray:
 	divps	xmm2, xmm0	; _36, tmp199
 
 ; week3.c:224: 	if (scene[num].material == 2) {				// compute_color MIRROR
-	mov	cl, [eax+_ZL5scene+52]	; _8,
+	mov	cl, [eax+scene+52]	; _8,
 	cmp	cl, 2
 	; XXX ???
-	;cmp	[eax+_ZL5scene+52], 2	; _8,
-	movaps	xmm5, [eax+_ZL5scene+16]	; result, scene[num_15].diffuse
+	;cmp	[eax+scene+52], 2	; _8,
+	movaps	xmm5, [eax+scene+16]	; result, scene[num_15].diffuse
 	jne	mirror_skip	;,
 mirror:
 	dotP3	xmm1, xmm2	; tmp204, _36,
@@ -319,7 +383,7 @@ mirror:
 	jmp	brdf_end	;
 mirror_skip:
 ; fbdev/../ray.h:52: 	vec3 rand = vfrand(); // randvec
-	call	_ZL6vfrandv	;
+	call	vfrand
 	movaps	xmm3, xmm0	; tmp212, rand
 
 ; NORM
@@ -373,13 +437,13 @@ change_direction_skip:
 ; week3.c:270: 	const vec3 moo = hadamard(foo, compute_color(hp_nudge, nextdir, depth+1)); // compute_color recurse
 	lea	eax, [edx+1]	; _10,
 	movaps	xmm0, xmm4	;, _37
-	call	_ZL13compute_colorDv4_fS_j	;
+	call	compute_color
 ; week3.c:271: 	return add(scene[num].emission,moo);
 	sal	ebx, 6	; tmp239,
 ; fbdev/../vec3.h:15: 	return a*b; // vec3 hadamard
 	mulps	xmm0, [esp]	; _48, %sfp
 ; fbdev/../vec3.h:5: 	return a+b; // vec3 add
-	addps	xmm0, [ebx+_ZL5scene+32]	; <retval>, scene[num_15].emission
+	addps	xmm0, [ebx+scene+32]	; <retval>, scene[num_15].emission
 compute_color_end:
 ; week3.c:272: } // compute_color end
 	add	esp, 24	;,
@@ -443,7 +507,7 @@ XLOOP:
 SAMPLELOOP:
 	movaps	[esp+48], xmm2	; %sfp, sample
 ; fbdev/../rand.h:79: 	vec3 rand = vfrand(); // vgauss
-	call	_ZL6vfrandv	;
+	call	vfrand
 	zero4	xmm1
 	movhlps	xmm1, xmm0	; tmp166, rand
 ; week3.c:367: 					reye += gauss * BLUR_VAL; // render defocus blur
@@ -460,7 +524,7 @@ SAMPLELOOP:
 ; week3.c:378: 					vec3 single = compute_color(reye, blur_ray, 0); // render call cmpute_color
 	xor	eax, eax	;
 	divps	xmm1, xmm3	;, tmp174
-	call	_ZL13compute_colorDv4_fS_j	;
+	call	compute_color
 ; fbdev/../vec3.h:5: 	return a+b; // vec3 add
 	movaps	xmm2, [esp+48]	; sample, %sfp
 	addps	xmm2, xmm0	; sample, single
@@ -491,17 +555,10 @@ OUTPUT:
 	jne	YLOOP
 	jmp	$
 
-;align 4, db 0
 
 [section .data align=1]
 
-
-%macro zero 1
-	times %1 db 0
-%endmacro
-
 %macro float 1
-	;dd float32(%tok(%strcat(%1,".0")))
 	dd float32(%1)
 %endmacro
 
@@ -519,7 +576,7 @@ OUTPUT:
 	dv %4	; emission
 	dd %2	; radius
 	db %5	; type
-	zero 11
+	resb 11
 %endmacro
 
 %assign DIFFUSE		0
@@ -527,7 +584,7 @@ OUTPUT:
 %assign MIRROR		2
 
 align 16, db 0
-_ZL5scene:
+scene:
 %assign num 0
 
 %define BLACK	{ 0.0, 0.0, 0.0 }
@@ -548,7 +605,7 @@ sphere { 0.3,   -0.2, 0.3},      0.36, PINK,   BLACK, 1
 NUM_SPHERES equ num
 
 
-scenesize equ $ - _ZL5scene
+scenesize equ $ - scene
 %warning SCENE SIZE %eval(scenesize)
 
 
